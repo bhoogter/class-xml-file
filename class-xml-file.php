@@ -5,7 +5,7 @@ Module Source: http://www.moreglory.net/
 Description: A convenient XML file wrapper designed for datastore and retrieval.
 Version: 1.0
 Author: Benjamin Hoogterp
-Author URI: http://www.BlazingGlory.org/
+Author URI: http://www.BenjaminHoogterp.com/
 License: MIT
 
 */
