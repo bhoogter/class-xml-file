@@ -244,7 +244,6 @@ class xml_file
         $D->load($f);
         return $D;
         }
-        
     static function DocToXML($Doc)  {return $Doc->saveXML();}
     static function DocElToDoc($El)
         {
@@ -266,38 +265,7 @@ class xml_file
         unset($xsl);
         return $D;
         }
-    static function transformXML_static($XML, $f)
-        {
-        if (!file_exists($f)) return false;
-        $Doc = new xml_file($f)->Doc;
-        if (!$Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transform_static()");
-        if (get_class($Doc)!="DOMDocument") self::backtrace("DOMDocument not supplied in xml_file::transform_static()");
-        $xh = new XsltProcessor();
-        $xsl = new DomDocument;
-        $xsl->load($f);
-        if ($doRegister) $xh->registerPHPFunctions();
-        $xh->importStyleSheet($xsl);
-        $D = $xh->transformToDoc($Doc);
-        unset($xh);
-        unset($xsl);
-        return $D;
-        }
-    static function transformXSL_static($XML, $XSL, $doRegister=true)
-        {
-        if (!file_exists($f)) return false;
-        $Doc = new xml_file($XML)->Doc;
-        if (!$Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
-        $xh = new XsltProcessor();
-        $xsl = new DomDocument;
-        $xsl->loadXML($XSL);
-        if ($doRegister) $xh->registerPHPFunctions();
-        $xh->importStyleSheet($xsl);
-        $D = $xh->transformToDoc($Doc);
-        unset($xh);
-        unset($xsl);
-        return $D;
-        }
-    static function transformXMLXSL_static($XML, $XSL, $doRegister=true) 
+    static function transformXSL_static($f, $XSL, $doRegister=true) 
         {
         if (!file_exists($f)) return false;
         if (!$Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
@@ -311,6 +279,10 @@ class xml_file
         unset($xsl);
         return $D;
         }
+    static function transformXML_static($XML, $f, $doRegister=true)
+        {return xml_file::transform_static(xml_file::XMLToDoc($XML), $f, $doRegister);}
+    static function transformXMLXSL_static($XML, $XSL, $doRegister=true)
+        {return xml_file::transformXSL_static(xml_file::XMLToDoc($XML), $XSL, $doRegister);}
     static function NodeToString($node, $part="all")
         {
         switch($part)
