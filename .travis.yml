@@ -5,6 +5,8 @@ php:
   - hhvm # on Trusty only
   - nightly
   
+script: phpunit --exclude-group FITS --bootstrap vendor/autoload.php tests
+  
 deploy:
   provider: releases
   api_key:
