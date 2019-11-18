@@ -2,8 +2,6 @@ language: php
 
 php:
   - '7.2'
-  - hhvm # on Trusty only
-  - nightly
   
 script: phpunit --bootstrap src/autoload.php tests
   
