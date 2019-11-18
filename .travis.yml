@@ -9,8 +9,8 @@ deploy:
   provider: releases
   api_key:
     secure: KmKwmt...[REDACTED]...LPE=
-  file: awesome-example.phar
+  file: class-xml-file.phar
   skip_cleanup: true
   on:
     tags: true
-    repo: my-org/awesome-example  
+    repo: release/class-xml-file  
