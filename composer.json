@@ -1,5 +1,10 @@
 
 {
+    "name": "bhoogter/XMLFile",
+    "description": "XML File Helper Object",
+    "keywords": ["xml"],
+    "homepage": "http://www.github.com/bhoogter/XMLFile",
+    "license": "LGPL v3",
     "autoload": {
         "classmap": [
             "src/"
