@@ -1,6 +1,16 @@
 language: php
+
 php:
   - '7.0'
   - hhvm # on Trusty only
   - nightly
   
+deploy:
+  provider: releases
+  api_key:
+    secure: KmKwmt...[REDACTED]...LPE=
+  file: awesome-example.phar
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: my-org/awesome-example  
