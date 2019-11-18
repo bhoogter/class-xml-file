@@ -3,7 +3,7 @@
     "name": "bhoogter/class-xml-file",
     "description": "XML File Helper Object",
     "keywords": ["xml"],
-    "homepage": "http://www.github.com/bhoogter/XMLFile",
+    "homepage": "http://www.github.com/bhoogter/class-xml-file",
     "license": "LGPL v3",
     "autoload": {
         "classmap": [
