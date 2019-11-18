@@ -5,7 +5,7 @@ php:
   - hhvm # on Trusty only
   - nightly
   
-script: phpunit FITS --bootstrap src/autoload.php tests
+script: phpunit --bootstrap src/autoload.php tests
   
 deploy:
   provider: releases
