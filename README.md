@@ -25,4 +25,4 @@ http://www.BenjaminHoogterp.com
 
 ## License
 
-MIT License
+LGPL v3.0
