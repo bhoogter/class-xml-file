@@ -5,9 +5,6 @@ php:
   
 script: phpunit --bootstrap src/autoload.php --test-suffix '-test.php,Test.php,.phpt' tests
 
- ...           Only search for test in files with specified
-                              suffix(es). Default: Test.php,.phpt
-
 deploy:
   provider: releases
   api_key:
