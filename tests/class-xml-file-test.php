@@ -1,2 +1,37 @@
 <?php
+declare(strict_types=1);
 
+use PHPUnit\Framework\TestCase;
+
+final class xml_file_test extends TestCase
+{
+    public $files;
+    function tearDown()
+    {
+        foreach ($this->files as $tmp) @unlink($tmp);
+    }
+
+    function tmpFile()
+    {
+        if ($this->files == null) $files = array();
+        $this->files[] = $tmp = tempnam('/tmp', 'test_');
+        unlink($tmp);
+        return $tmp;
+    }
+
+    public function testCreateXMLFile()
+    {
+        $subject = new xml_file();
+        $this->assertNotNull($subject);
+    }
+
+    public function testTempFile()
+    {
+        $testText = "12345";
+        $fname = $this->tmpFile();
+        file_put_contents($testText);
+        $result = file_get_contents($fname);
+        $this->assertEquals($testText, $result);
+    }
+
+}
