@@ -19,13 +19,13 @@ final class xml_file_test extends TestCase
         return $tmp;
     }
 
-    public function testCreateXMLFile()
+    public function testCreateXMLFile(): void
     {
         $subject = new xml_file();
         $this->assertNotNull($subject);
     }
 
-    public function testTempFile()
+    public function testTempFile(): void
     {
         $testText = "12345";
         $fname = $this->tmpFile();
