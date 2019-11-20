@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
-require('class-xml-file-test.php');
+
+require("../src/class_xml_file.php");
+
 final class xml_file_read_test extends xml_file_test
 {
     public $files;
