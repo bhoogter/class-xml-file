@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+require("../src/class_xml_file.php");
+
 class xml_file_test extends TestCase
 {
     public $files;
