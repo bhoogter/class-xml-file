@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 final class xml_file_test extends TestCase
 {
     public $files;
-    function tearDown()
+    function tearDown(): void
     {
         foreach ($this->files as $tmp) @unlink($tmp);
     }
