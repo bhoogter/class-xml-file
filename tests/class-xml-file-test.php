@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-final class xml_file_test extends TestCase
+class xml_file_test extends TestCase
 {
     public $files;
     function tearDown(): void
