@@ -31,7 +31,7 @@ class xml_file_test extends TestCase
     {
         $testText = "12345";
         $fname = $this->tmpFile();
-        file_put_contents($testText);
+        file_put_contents($fname, $testText);
         $result = file_get_contents($fname);
         $this->assertEquals($testText, $result);
     }
