@@ -8,12 +8,13 @@ require(__DIR__."/../src/class-xml-file.php");
 class xml_file_test extends TestCase
 {
     public $files;
-    function tearDown(): void
+    public function tearDown(): void
     {
-        foreach ($this->files as $tmp) @unlink($tmp);
+        if (is_array($this->files))
+            foreach ($this->files as $tmp) @unlink($tmp);
     }
 
-    function tmpFile()
+    public function tmpFile()
     {
         if ($this->files == null) $files = array();
         $this->files[] = $tmp = tempnam('/tmp', 'test_');
