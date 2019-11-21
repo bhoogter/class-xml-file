@@ -15,12 +15,10 @@ final class xml_file_read_test extends xml_file_test
         $s .= "    <name>Name #1</name>" . "\n";
         $s .= "    <size>Small</size>" . "\n";
         $s .= "  </item>" . "\n";
-        $s .= "<items>" . "\n";
         $s .= "  <item id='2'>" . "\n";
         $s .= "    <name>Name #2</name>" . "\n";
         $s .= "    <size>Medium</size>" . "\n";
         $s .= "  </item>" . "\n";
-        $s .= "<items>" . "\n";
         $s .= "  <item id='3'>" . "\n";
         $s .= "    <name>Name #3</name>" . "\n";
         $s .= "    <size>Large</size>" . "\n";
