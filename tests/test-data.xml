@@ -1,15 +1,15 @@
-<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n";
-<items>" . "\n";
-  <item id='1'>" . "\n";
-    <name>Name #1</name>" . "\n";
-    <size>Small</size>" . "\n";
-  </item>" . "\n";
-  <item id='2'>" . "\n";
-    <name>Name #2</name>" . "\n";
-    <size>Medium</size>" . "\n";
-  </item>" . "\n";
-  <item id='3'>" . "\n";
-    <name>Name #3</name>" . "\n";
-    <size>Large</size>" . "\n";
-  </item>" . "\n";
-items>";
+<?xml version="1.0\ encoding="UTF-8" standalone="no" ?>
+<items>
+  <item id='1'>
+    <name>Name #1</name>
+    <size>Small</size>
+  </item>
+  <item id='2'>
+    <name>Name #2</name>
+    <size>Medium</size>
+  </item>
+  <item id='3'>
+    <name>Name #3</name>
+    <size>Large</size>
+  </item>
+<items>
