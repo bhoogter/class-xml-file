@@ -8,8 +8,9 @@ final class xml_file_read_test extends xml_file_test
 {
     public $files;
     function tearDown(): void
-    {
-        foreach ($this->files as $tmp) @unlink($tmp);
+    {  
+        if (is_array($this->files) 
+            foreach ($this->files as $tmp) @unlink($tmp);     
     }
     function tmpFile()
     {
