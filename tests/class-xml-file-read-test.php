@@ -21,7 +21,7 @@ final class xml_file_read_test extends xml_file_test
     function createTestXML() {
         $tmp = $this->tmpFile();
         $s = "";
-        $s .= "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>";
+        $s .= "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n";
         $s .= "<items>" . "\n";
         $s .= "  <items id='1'>" . "\n";
         $s .= "    <name>Name #1</name>" . "\n";
