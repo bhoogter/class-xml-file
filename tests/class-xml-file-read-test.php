@@ -6,19 +6,6 @@ require(__DIR__."/class-xml-file-test.php");
 
 final class xml_file_read_test extends xml_file_test
 {
-    public $files;
-    function tearDown(): void
-    {  
-        if (is_array($this->files) 
-            foreach ($this->files as $tmp) @unlink($tmp);     
-    }
-    function tmpFile()
-    {
-        if ($this->files == null) $files = array();
-        $this->files[] = $tmp = tempnam('/tmp', 'test_');
-        unlink($tmp);
-        return $tmp;
-    }
     function createTestXML() {
         $tmp = $this->tmpFile();
         $s = "";
