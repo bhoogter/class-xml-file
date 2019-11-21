@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require("../src/class-xml-file.php");
+require(__DIR__."/../src/class-xml-file.php");
 
 class xml_file_test extends TestCase
 {
