@@ -112,7 +112,7 @@ class xml_file_test extends TestCase
         $result = $subject->load($this->createInvalidXML());
 
         $this->assertFalse($result);
-        $this->assertNull($subject->err);
+        $this->assertNotNull($subject->err);
     }
 
 
