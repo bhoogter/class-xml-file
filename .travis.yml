@@ -25,4 +25,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    repo: release/class-xml-file  
+    repo: class-xml-file
