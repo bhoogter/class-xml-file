@@ -1,6 +1,5 @@
 {
   "output": "class-xml-file.phar",
-  "main": "class-xml-file",
   "directories": ["src"],
   "files": ["README.md", "VERSION"],
   "finder": [
