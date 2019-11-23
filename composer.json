@@ -1,6 +1,12 @@
 {
   "name": "bhoogter/class-xml-file",
   "description": "XML File Helper Object",
+  "authors": [
+    {
+      "name": "Benjamin Hoogterp",
+      "email": "benjaminhoogterp@gmail.com"
+    }
+  ],
   "keywords": [
     "xml"
   ],
