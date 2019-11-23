@@ -2,7 +2,7 @@
   "output": "class-xml-file.phar",
   "main": "example",
   "directories": ["src"],
-  "files": ["class-xml-file"],
+  "files": ["README.md", "VERSION"],
   "finder": [
     {
       "name": "*.php",
