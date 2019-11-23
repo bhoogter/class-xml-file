@@ -100,23 +100,18 @@ class xml_file_test extends TestCase
 
     public function testLoadNonExistentFile(): void
     {
-    $subject = new xml_file();
-    $result = $subject->load($this->tmpFile());
-    $this->assertFalse($subject->loaded);
-    $this->assertFalse($result);
+        $subject = new xml_file();
+        $result = $subject->load($this->tmpFile());
+        $this->assertFalse($subject->loaded);
+        $this->assertFalse($result);
     }
 
     public function testInvalidXML(): void
     {
-        $failed = false;
-        $subject = null;
-        try {
-            $subject = new xml_file($this->createInvalidXML());
-        } catch (Exception $e) {
-            $failed = true;
-        }
+        $subject = new xml_file();
+        $result = $subject->load($this->createInvalidXML());
 
-        $this->assertTrue($failed);
+        $this->assertFalse($result);
         $this->assertNotEquals("", $subject->err);
     }
 
