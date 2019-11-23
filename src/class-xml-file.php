@@ -22,6 +22,7 @@ class xml_file
     public $modified;
     public $readonly;
     public $notidy;
+    public $stacktrace;
     public $sourceDate;
     public $saveMethod;
 
@@ -44,6 +45,7 @@ class xml_file
             if (strstr(strtolower($a[1]), "xhtml")) $this->mode = 'xhtml';
             if (strstr(strtolower($a[1]), "readonly")) $this->readonly = true;
             if (strstr(strtolower($a[1]), "notidy")) $this->notidy = true;
+            if (strstr(strtolower($a[1]), "stacktrace")) $this->stacktrace = true;
         }
         if ($n >= 3) {
             if (is_string($a[2])) {
@@ -100,7 +102,9 @@ class xml_file
     {
         $this->sourceDate = $D == 0 ? time() : $D;
         $this->loaded = isset($this->Doc);
-        if (get_class($this->Doc) != "DOMDocument") self::backtrace("Invalid Object Type: " . get_class($this->Doc));
+        if (get_class($this->Doc) != "DOMDocument")
+            if ($this->stacktrace)
+                self::backtrace("Invalid Object Type: " . get_class($this->Doc));
         $this->XQuery = $this->loaded ? new DOMXPath($this->Doc) : null;
         return $this->loaded;
     }
@@ -116,12 +120,14 @@ class xml_file
         try {
             $res = $this->Doc->load($file);
         } catch (Exception $e) {
+            $this->err = $e->getMessage();
             $res = false;
         }
 
         if ($res === false) {
             echo "<br />Failed to read: $file\n";
-//            self::backtrace("Failed to read: $file");
+            if ($this->stacktrace)
+                self::backtrace("Failed to read: $file");
             return $this->clear();
         }
         $x = $this->init(filemtime($file));
@@ -155,7 +161,8 @@ class xml_file
     function saveXML($style = "auto")
     {
         if (!isset($this->Doc)) {
-            self::backtrace();
+            if ($this->stacktrace)
+                self::backtrace();
             die("<br/><b><u>XMLFILE</u>::saveXML:</b> No Doc for save, $this");
         }
         $s = $this->Doc->saveXML();
