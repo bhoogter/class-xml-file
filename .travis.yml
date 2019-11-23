@@ -1,4 +1,8 @@
 language: php
+branches:
+  only:
+    - master
+
 
 php:
   - '7.2'
@@ -8,6 +12,10 @@ script: phpunit --bootstrap src/autoload.php --test-suffix '-test.php,Test.php,.
 
 notifications:
   email: false
+
+before_deploy:
+  - composer install --prefer-dist --no-dev --no-interaction
+  - php box.phar build
 
 deploy:
   provider: releases
