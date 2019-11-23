@@ -46,6 +46,18 @@ class xml_file_test extends TestCase
         return $tmp;
     }
 
+    function createInvalidXML()
+    {
+        $tmp = $this->tmpFile();
+        $s = "";
+        $s .= "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\n";
+        $s .= "<items>" . "\n";
+        $s .= "  <item id='1'>" . "\n";
+        $s .= "</items>";
+        file_put_contents($tmp, $s);
+        return $tmp;
+    }
+
     public function testCreateXMLFile(): void
     {
         $subject = new xml_file();
@@ -67,6 +79,7 @@ class xml_file_test extends TestCase
         $this->assertNotEquals("", $subject->gid);
         $this->assertEquals($fname, $subject->filename);
         $this->assertTrue($subject->loaded);
+        $this->assertEquals("", $subject->err);
     }
 
     public function testClearObject(): void
@@ -83,6 +96,13 @@ class xml_file_test extends TestCase
         $this->assertEquals($gid, $subject->gid);
         $this->assertFalse($subject->readonly);
         $this->assertFalse($subject->notidy);
+    }
+
+    public function testInvalidXML(): void
+    {
+        $subject = new xml_file($this->createInvalidXML());
+
+        $this->assertNotEquals("", $subject->err);
     }
 
 
