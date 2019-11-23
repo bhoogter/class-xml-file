@@ -100,8 +100,14 @@ class xml_file_test extends TestCase
 
     public function testInvalidXML(): void
     {
-        $subject = @new xml_file($this->createInvalidXML());
+        $failed = false;
+        try {
+            $subject = new xml_file($this->createInvalidXML());
+        } catch (Exception $3) {
+        $failed = true;
+    }
 
+        $this->assertTrue($failed);
         $this->assertNotEquals("", $subject->err);
     }
 
