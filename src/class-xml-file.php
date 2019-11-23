@@ -112,7 +112,13 @@ class xml_file
         if (!file_exists($file)) return false;
         $this->filename = $file;
         $this->Doc = new DomDocument;
-        $res = $this->Doc->load($file);
+        $res = false;
+        try {
+            $res = $this->Doc->load($file);
+        } catch (Exception $e) {
+            $res = false;
+        }
+
         if ($res === false) {
             echo "<br />Failed to read: $file";
             self::backtrace("Failed to read: $file");

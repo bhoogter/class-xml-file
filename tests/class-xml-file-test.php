@@ -98,6 +98,14 @@ class xml_file_test extends TestCase
         $this->assertFalse($subject->notidy);
     }
 
+    public function testLoadNonExistentFile(): void
+    {
+    $subject = new xml_file();
+    $result = $subject->load($this->tmpFile());
+    $this->assertFalse($subject->loaded);
+    $this->assertFalse($result);
+    }
+
     public function testInvalidXML(): void
     {
         $failed = false;
