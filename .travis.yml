@@ -8,18 +8,11 @@ script: phpunit --bootstrap src/autoload.php --test-suffix '-test.php,Test.php,.
   tests
 notifications:
   email: false
-#before_deploy:
-#- composer install --prefer-dist --no-dev --no-interaction
-#- php box.phar build
 
 before_deploy:
   - composer phar:install-tools
   - composer install --prefer-dist --no-dev --no-interaction
   - php box.phar build
-#before_deploy:
-#  - composer phar:install-tools
-#  - composer install --prefer-dist --no-dev --no-interaction
-#  - php box.phar build
 deploy:
   provider: releases
   api_key:
