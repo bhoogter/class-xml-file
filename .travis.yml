@@ -2,8 +2,12 @@ language: php
 
 php:
   - '7.2'
+
   
 script: phpunit --bootstrap src/autoload.php --test-suffix '-test.php,Test.php,.phpt' tests
+
+notifications:
+  email: false
 
 deploy:
   provider: releases
