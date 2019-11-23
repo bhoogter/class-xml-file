@@ -120,7 +120,7 @@ class xml_file
         }
 
         if ($res === false) {
-            echo "<br />Failed to read: $file";
+            echo "<br />Failed to read: $file\n";
             self::backtrace("Failed to read: $file");
             return $this->clear();
         }
