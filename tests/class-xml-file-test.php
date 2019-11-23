@@ -103,9 +103,9 @@ class xml_file_test extends TestCase
         $failed = false;
         try {
             $subject = new xml_file($this->createInvalidXML());
-        } catch (Exception $3) {
-        $failed = true;
-    }
+        } catch (Exception $e) {
+            $failed = true;
+        }
 
         $this->assertTrue($failed);
         $this->assertNotEquals("", $subject->err);
