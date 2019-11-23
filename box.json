@@ -2,5 +2,18 @@
   "output": "class-xml-file.phar",
   "main": "example",
   "directories": ["src"],
-  "files": ["class-xml-file"]
+  "files": ["class-xml-file"],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": [
+        "test",
+        "tests",
+        "Test",
+        "Tests",
+        "Tester"
+      ],
+      "in": "vendor"
+    }
+  ]
 }
