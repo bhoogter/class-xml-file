@@ -22,3 +22,4 @@ deploy:
   file: class-xml-file.phar
   on:
     repo: bhoogter/class-xml-file
+    tags: true
