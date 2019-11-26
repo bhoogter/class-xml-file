@@ -14,11 +14,6 @@ modifying contents, including creating new entries.
 
 None / Standalone.
 
-## History
-
-2019.11.26 - 0.3.0 - PHAR modularizedq
-2015.02.23 - 1.0 - Published to GitHub
-
 ## Credits
 
 Benjamin Hoogterp
