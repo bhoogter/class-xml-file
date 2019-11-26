@@ -10,10 +10,6 @@ modifying contents, including creating new entries.
 1. Perform most standard operations without creating a new XML query object.
 1. Can automatically TIDY output on save, in a variety of pre-defined configurations (XML, XHTML)--or pass your own.
 
-## Prerequisites
-
-None / Standalone.
-
 ## Credits
 
 Benjamin Hoogterp
