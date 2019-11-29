@@ -15,8 +15,8 @@ git tag "$ver"
 git push origin "$ver"
 
 # Advance to the next patch release, add the '-dev' suffix back on, and commit the result.
-#a=( ${ver//./ } ) && ((a[2]++))
-#echo "${a[0]}.${a[1]}.${a[2]}-dev" > VERSION
-#git add VERSION
-#git commit -m "Back to -dev"
-#git push origin master
+a=( ${ver//./ } ) && ((a[2]++))
+echo "${a[0]}.${a[1]}.${a[2]}-dev" > VERSION
+git add VERSION
+git commit -m "Back to -dev"
+git push origin master

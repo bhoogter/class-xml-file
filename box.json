@@ -1,18 +1,6 @@
 {
   "output": "class-xml-file.phar",
   "directories": ["src"],
-  "files": ["README.md", "VERSION"],
-  "finder": [
-    {
-      "name": "*.php",
-      "exclude": [
-        "test",
-        "tests",
-        "Test",
-        "Tests",
-        "Tester"
-      ],
-      "in": "vendor"
-    }
+  "files": ["README.md", "VERSION"]
   ]
 }
