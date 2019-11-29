@@ -1,5 +1,9 @@
 {
-  "output": "class-xml-file.phar",
-  "directories": ["src"],
-  "files": ["README.md", "VERSION"]
+  "files": [
+    "README.md",
+    "VERSION",
+    "LICENSE",
+    "src/Put.php"
+  ],
+  "output": "class-xml-file.phar"
 }
