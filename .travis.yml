@@ -28,4 +28,3 @@ deploy:
       only:
         - master
         - /[v]\d+\.\d+\.\d+/
-    all_branches: true
