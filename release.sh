@@ -1,7 +1,7 @@
 #!/bin/bash
-set -e
+set -e -x
 
-git pull -r
+#git pull -r
 
 # Remove '-dev' from the version file to prepare for release.
 sed -e 's/-dev$//' VERSION > VERSION.tmp
