@@ -9,10 +9,9 @@ mv -f VERSION.tmp VERSION
 
 # Tag a release
 ver="$(cat VERSION)"
-git add VERSION
-git commit -m "Version $ver"
+git commit -am "Version $ver"
 git tag "$ver"
-git push origin "$ver"
+git push origin "$ver" --follow-tags
 
 # Advance to the next patch release, add the '-dev' suffix back on, and commit the result.
 #a=( ${ver//./ } ) && ((a[2]++))
