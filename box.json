@@ -3,7 +3,7 @@
     "README.md",
     "VERSION",
     "LICENSE",
-    "src/Put.php"
+    "src/class-xml-file.php"
   ],
   "output": "class-xml-file.phar"
 }
