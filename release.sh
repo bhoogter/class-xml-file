@@ -15,8 +15,8 @@ echo "00000000000000"
 git push --follow-tags
 
 # Advance to the next patch release, add the '-dev' suffix back on, and commit the result.
-#a=( ${ver//./ } ) && ((a[2]++))
-#echo "${a[0]}.${a[1]}.${a[2]}-dev" > VERSION
-#git add VERSION
-#git commit -m "Back to -dev: $(cat VERSION)"
+a=( ${ver//./ } ) && ((a[2]++))
+echo "${a[0]}.${a[1]}.${a[2]}-dev" > VERSION
+git add VERSION
+git commit -m "Back to -dev: $(cat VERSION)"
 #git push origin master
