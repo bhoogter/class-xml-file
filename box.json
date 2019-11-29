@@ -2,5 +2,4 @@
   "output": "class-xml-file.phar",
   "directories": ["src"],
   "files": ["README.md", "VERSION"]
-  ]
 }
