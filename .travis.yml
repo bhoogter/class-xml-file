@@ -24,5 +24,4 @@ deploy:
     tags: true
     branches:
       only:
-        - master
-        - /[v]\d+\.\d+\.\d+/
+        - /Version .*/
