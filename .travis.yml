@@ -22,7 +22,7 @@ deploy:
     on:
       repo: bhoogter/class-xml-file
       tags: true
-      #    all_branches: true
+      all_branches: true
       branches:
         - /^Version.*/
         - /(\d+\.)?(\d+\.)?(\*|\d+)$/
