@@ -11,8 +11,6 @@ git commit -m "Version $ver"
 git tag "$ver"
 git push origin "$ver"
 
-sleep 1m
-
 # Advance to the next patch release, add the '-dev' suffix
 # back on, and commit the result.
 a=( ${ver//./ } ) && ((a[2]++))
