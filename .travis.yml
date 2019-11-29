@@ -26,3 +26,4 @@ deploy:
     branches:
       only:
         - /^\d.*/
+        - /^Version.*/
