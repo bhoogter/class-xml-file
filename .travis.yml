@@ -26,4 +26,4 @@ deploy:
 #    all_branches: true
     branches:
       only:
-        - /\d+\.\d+\.\d+/
+        - /^\d.*/
