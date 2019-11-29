@@ -22,9 +22,8 @@ deploy:
   skip_cleanup: true
   on:
     repo: bhoogter/class-xml-file
-    tags: true
-    all_branches: true
-#    branches:
-#      only:
-#        - /Version .+/
-#        - /\d+\.\d+\.\d+/
+#    tags: true
+#    all_branches: true
+    branches:
+      only:
+        - /\d+\.\d+\.\d+/
