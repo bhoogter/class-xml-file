@@ -22,7 +22,8 @@ deploy:
   on:
     repo: bhoogter/class-xml-file
     tags: true
-    branches:
-      only:
-        - /Version .+/
-        - /\d+\.\d+\.\d+/
+    all_branches: true
+#    branches:
+#      only:
+#        - /Version .+/
+#        - /\d+\.\d+\.\d+/
