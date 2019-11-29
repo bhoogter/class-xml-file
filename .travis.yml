@@ -13,8 +13,6 @@ before_deploy:
   - composer phar:install-tools
   - composer install --prefer-dist --no-dev --no-interaction
   - php box.phar build
-  - git add class-xml-file.phar
-  - git commit -m "Update Release"
 deploy:
   provider: releases
   api_key:
