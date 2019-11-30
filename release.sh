@@ -19,4 +19,4 @@ a=( ${ver//./ } ) && ((a[2]++))
 echo "${a[0]}.${a[1]}.${a[2]}-dev" > VERSION
 git add VERSION
 git commit -m "Back to -dev: $(cat VERSION)"
-#git push origin master
+git push origin master
