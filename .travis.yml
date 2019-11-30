@@ -26,5 +26,5 @@ deploy:
       tags: true
       branches:
         only:
-          - /^\d+\.\d+\.\d+$/
+          - /^[Version ]\d+\.\d+\.\d+$/
 
