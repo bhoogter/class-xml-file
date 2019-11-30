@@ -11,7 +11,6 @@ mv -f VERSION.tmp VERSION
 ver="$(cat VERSION)"
 git commit -am "Version $ver"
 git tag "$ver"
-echo "00000000000000"
 git push --follow-tags
 
 # Advance to the next patch release, add the '-dev' suffix back on, and commit the result.

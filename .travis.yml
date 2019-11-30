@@ -1,6 +1,7 @@
 language: php
 branches:
   only:
+    - master
     - /^.*[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
 
 php:
@@ -24,7 +25,4 @@ deploy:
     on:
       repo: bhoogter/class-xml-file
       tags: true
-      branches:
-        only:
-          - /^.*[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
 
