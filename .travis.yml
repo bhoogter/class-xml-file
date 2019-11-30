@@ -1,7 +1,7 @@
 language: php
 branches:
   only:
-    - /^[Version ]\d+\.\d+\.\d+$/
+    - /\d+\.\d+\.\d+/
 
 php:
   - '7.2'
@@ -26,5 +26,5 @@ deploy:
       tags: true
       branches:
         only:
-          - /^[Version ]\d+\.\d+\.\d+$/
+          - /^\d+\.\d+\.\d+/
 
