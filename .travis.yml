@@ -1,7 +1,7 @@
 language: php
 branches:
   only:
-    - /\d+\.\d+\.\d+/
+    - /^.*[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
 
 php:
   - '7.2'
@@ -26,5 +26,5 @@ deploy:
       tags: true
       branches:
         only:
-          - /^\d+\.\d+\.\d+/
+          - /^.*[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$/
 
