@@ -1,2 +1,4 @@
 .idea/
 class-xml-file.phar
+vendor/
+composer.lock
