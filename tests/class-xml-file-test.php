@@ -18,7 +18,10 @@ class xml_file_test extends TestCase
     public function tmpFile()
     {
         if ($this->files == null) $files = array();
-        $this->files[] = $tmp = tempnam('/tmp', 'test_');
+        if (file_exists("C:\WINDOWS\Temp") && is_dir("C:\WINDOWS\Temp"))
+            $this->files[] = $tmp = tempnam('C:\WINDOWS\Temp', 'test_');
+        else
+            $this->files[] = $tmp = tempnam('/tmp', 'test_');
         unlink($tmp);
         return $tmp;
     }
