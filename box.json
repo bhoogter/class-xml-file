@@ -5,5 +5,5 @@
     "LICENSE",
     "src/class-xml-file.php"
   ],
-  "output": "class-xml-file.phar"
+  "output": "xml-file.phar"
 }
