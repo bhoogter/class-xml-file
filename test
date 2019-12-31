@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)
+
+php ../phpunit-6.5.14.phar $1
+
