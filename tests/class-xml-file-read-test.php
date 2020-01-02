@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require(__DIR__ . "/class-xml-file-test.php");
+require_once(__DIR__ . "/autoload.php");
 
-
-final class xml_file_read_test extends xml_file_test
+final class xml_file_read_test extends xml_file_test_utils
 {
 
     public function testReadXML(): void
