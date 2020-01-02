@@ -265,6 +265,11 @@ class xml_file
         return $this->set_part($p, $v);
     }
 
+    function del($p)
+    {
+        return $this->delete_part($p);
+    }
+
     function lst($p)
     {
         return $this->fetch_list($p);

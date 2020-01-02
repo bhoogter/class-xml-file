@@ -15,7 +15,7 @@ final class xml_file_lint_test extends xml_file_test
         $count = substr_count($subject, "\n");
 
         if (class_exists("tidy"))
-            $this->assertEquals(5, $count);
+            $this->assertEquals(9, $count);
         else
             $this->assertEquals(1, $count);
     }

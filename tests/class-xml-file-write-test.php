@@ -61,7 +61,7 @@ final class xml_file_write_test extends xml_file_test
         $tmp = $this->createTestXML();
         $subject = new xml_file($tmp);
 
-        $subject->set("//items/item[@id=2]", "");
+        $subject->del("//items/item[@id=2]", "");
 
         $result = $subject->get("//items/item[@id=2]/name");
 
