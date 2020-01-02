@@ -14,6 +14,9 @@ final class xml_file_lint_test extends xml_file_test
         $subject = xml_file::make_tidy_string("<?xml version='1.0' ?>\n<a><b><c /></b><d><e></e><f></f></d></a>");
         $count = substr_count($subject, "\n");
 
-        $this->assertEquals(5, $count);
+        if (class_exists("tidy"))
+            $this->assertEquals(5, $count);
+        else
+            $this->assertEquals(1, $count);
     }
 }

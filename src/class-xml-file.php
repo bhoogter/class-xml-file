@@ -752,6 +752,7 @@ class xml_file
     static function make_tidy_string($str, $style = "auto")
     {
         if ($style == "none") return $str;
+        if (!class_exists("tidy")) return $str;
         $tidy = new tidy;
         $tidy->parseString($str, self::tidy_opt($style));
         $tidy->CleanRepair();
@@ -775,6 +776,7 @@ class xml_file
     static function make_tidy($filename, $style = "xml")
     {
         if ($style == "none") return true;
+        if (!class_exists("tidy")) return false;
         $tidy = new tidy;
         $tidy->parseFile($filename, self::tidy_opt($style));
         $tidy->CleanRepair();
@@ -802,5 +804,4 @@ class xml_file
         print "ERROR: $m";
         debug_print_backtrace();
     }
-}       // xml_file
-?>
+}
