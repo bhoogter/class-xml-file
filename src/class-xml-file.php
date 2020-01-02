@@ -341,7 +341,11 @@ class xml_file
 
     static function transformXSL_static($f, $XSL, $doRegister = true)
     {
-        if (!file_exists($f)) return false;
+        if (is_string($f)) {
+            $f = new DomDocument;
+            if (file_exists($f)) $f->load($f);
+            else $f->loadXML($f);
+        }
         if (!$f) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
         $xh = new XsltProcessor();
         $xsl = new DomDocument;

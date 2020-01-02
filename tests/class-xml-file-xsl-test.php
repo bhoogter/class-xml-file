@@ -11,10 +11,10 @@ final class xml_file_lint_test extends xml_file_test
 
     public function testReadXML(): void
     {
-        $xml = $this->createTestXML();
-        $xsl = $this->createTestXSL();
-        $result = xml_file::transformXMLXSL_static($xml, $xsl);
+        $xml = file_get_contents($this->createTestXML());
+        $xsl = file_get_contents($this->createTestXSL());
+        $result = xml_file::transformXMLXSL_static($xml, $xsl)->saveXML();
 
-        $this->assertEquals(0, 1);
+        $this->assertTrue(strpos($result, "Name #1,Name #2,Name #3") !== false);
     }
 }

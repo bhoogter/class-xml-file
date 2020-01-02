@@ -52,18 +52,16 @@ class xml_file_test extends TestCase
     {
         $n = "\n";
 
-        $tmp = $this->tmpFile();
         $s = "";
-        $s .= $n . '<?xml version="1.0" encoding="UTF-8"?>';
+        // $s .= $n . '<?xml version="1.0" encoding="UTF-8" ?' . '>';
         $s .= $n . '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">';
         $s .= $n;
-        $s .= $n . '<xsl:template match="/">';
-        $s .= $n . '  <xsl:for-each select="items/item/name">';
-        $s .= $n . '    <xsl:value-of select='.' />,';
-        $s .= $n . '  </xsl:for-each>';
-        $s .= $n . '</xsl:template>';
+        $s .= $n . ' <xsl:template match="/">';
+        $s .= $n . '   <xsl:for-each select="items/item/name"><xsl:value-of select="." />,</xsl:for-each>';
+        $s .= $n . ' </xsl:template>';
         $s .= $n . '</xsl:stylesheet>';
 
+        $tmp = $this->tmpFile();
         file_put_contents($tmp, $s);
         return $tmp;
     }
