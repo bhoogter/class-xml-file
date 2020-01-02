@@ -182,7 +182,7 @@ class xml_file
 
     function query($Path)
     {
-        if ($Path == "") zoDie("No Path in XMLFILE::QUERY");
+        if ($Path == "") die("No Path in XMLFILE::QUERY");
         if (!$this->loaded || $this->Doc == null) return "";//die("No file in XMLFILE::QUERY");
         if ($this->XQuery == null) $this->XQuery = new DOMXPath($this->Doc);
         if (($res = $this->XQuery->query($Path)) === false) debug_print_backtrace();
@@ -342,13 +342,13 @@ class xml_file
     static function transformXSL_static($f, $XSL, $doRegister = true)
     {
         if (!file_exists($f)) return false;
-        if (!$Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
+        if (!$f) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
         $xh = new XsltProcessor();
         $xsl = new DomDocument;
         $xsl->loadXML($XSL);
         if ($doRegister) $xh->registerPHPFunctions();
         $xh->importStyleSheet($xsl);
-        $D = $xh->transformToDoc($Doc);
+        $D = $xh->transformToDoc($f);
         unset($xh);
         unset($xsl);
         return $D;
@@ -379,7 +379,7 @@ class xml_file
             case "close":
                 return ($node->hasChildNodes()) ? "</" . $node->nodeName . ">" : '';
             default:
-                return $N->ownerDocument->saveXML($N);      // all
+                return $node->ownerDocument->saveXML($node);      // all
         }
     }
 
@@ -778,7 +778,7 @@ class xml_file
         $tidy = new tidy;
         $tidy->parseFile($filename, self::tidy_opt($style));
         $tidy->CleanRepair();
-        return file_put_contents($str, $tidy->value);
+        return file_put_contents($filename, $tidy->value);
     }
 
     static function tidy_cleanup($s, $style = 'auto')             // when tidy makes a mess....
