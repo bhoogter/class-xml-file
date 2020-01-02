@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-
-require(__DIR__ . "/../src/class-xml-file.php");
 
 class xml_file_test extends TestCase
 {
@@ -117,6 +116,4 @@ class xml_file_test extends TestCase
         $this->assertFalse($result);
         $this->assertNotNull($subject->err);
     }
-
-
 }
