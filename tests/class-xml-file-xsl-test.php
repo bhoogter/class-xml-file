@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require(__DIR__ . "/class-xml-file-test.php");
+require_once(__DIR__ . "/class-xml-file-test.php");
 
 final class xml_file_xsl_test extends xml_file_test
 {
