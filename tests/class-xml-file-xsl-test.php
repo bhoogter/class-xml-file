@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 require(__DIR__ . "/class-xml-file-test.php");
 
-final class xml_file_lint_test extends xml_file_test
+final class xml_file_xsl_test extends xml_file_test
 {
 
     public function testReadXML(): void
