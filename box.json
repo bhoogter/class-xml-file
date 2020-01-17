@@ -3,7 +3,8 @@
     "README.md",
     "VERSION",
     "LICENSE",
-    "src/class-xml-file.php"
+    "src/class-xml-file.php",
+    "src/autoload.php"
   ],
   "output": "xml-file.phar"
 }
