@@ -4,8 +4,8 @@
     "VERSION",
     "LICENSE",
     "src/class-xml-file.php",
-    "src/autoload.php"
+    "src/stub.php"
   ],
-  "stub": "src/autoload.php",
+  "stub": "src/stub.php",
   "output": "xml-file.phar"
 }
