@@ -1,5 +1,5 @@
 .idea/
-class-xml-file.phar
+xml-file.phar
 box.phar
 vendor/
 composer.lock

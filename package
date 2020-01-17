@@ -14,4 +14,6 @@ if [[ "$BOX" == "" ]]; then
 	exit 0
 fi
 
-$(php ${BOX} build)
+echo "Packaging project..."
+php ${BOX} build
+echo "Complete."
