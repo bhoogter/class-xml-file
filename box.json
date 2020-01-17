@@ -6,5 +6,6 @@
     "src/class-xml-file.php",
     "src/autoload.php"
   ],
+  "stub": "src/autoload.php",
   "output": "xml-file.phar"
 }
