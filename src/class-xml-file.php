@@ -688,6 +688,86 @@ class xml_file
         return true;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function loadJson($json, $root = 'jsonData') {
+        if (file_exists($json)) $json = file_get_contents($json);
+        $this->Doc = $this->jsonToDomDocument($json, $root);
+        $this->init();
+    }
+
+    private function jsonToDomDocument($json, $root = 'jsonData')
+    {
+// print("\n<br/>jsonToDomDocument()");
+        try {
+            $data = json_decode($json);
+        } catch(Exception $e) {
+             throw new Exception("jsonToDomDocument: json_decode failed: " + e.getMessage());
+        }
+// print_r($data);
+        
+// print("\n<br/>jsonToDomDocument(): Creating document");
+        $doc = new DomDocument();
+// print("\n<br/>jsonToDomDocument(): Loading document");
+        $doc->loadXML("<?xml version=\"1.0\" ?>\n<$root />");
+
+// print("\n<br/>jsonToDomDocument(): loading data");
+        $this->jsonToDomDocumentItem($data, $doc->documentElement, $doc);
+// print("\n<br/>jsonToDomDocument(): loaded data");
+        return $doc;
+    }
+
+    private function cleanXmlName($name) {
+// Element names are case-sensitive
+// Element names must start with a letter or underscore
+// Element names cannot start with the letters xml (or XML, or Xml, etc)
+// Element names can contain letters, digits, hyphens, underscores, and periods
+// Element names cannot contain spaces
+        $name = preg_replace("[\]\[ &<>,]", "-", $name);
+        if (preg_match("[a-zA-Z_]", $name) === false) $name = "_$name";
+        return $name;
+    }
+
+    private function cleanXmlVal($name) {
+        return "$name";
+    }
+
+    private function jsonToDomDocumentItem($el,  $parent, $doc)
+    {
+// print "\n<br/>jsonToDomDocumentArray(): class=" . (is_object($el) ? get_class($el) : "--");
+        if (is_a($el, "stdClass")) {
+            foreach ($el as $item => $val) {
+// print "\n<br/>jsonToDomDocumentArray(): item=$item [" . $this->cleanXmlName($item) . "]";
+                $node = $doc->createElement($this->cleanXmlName($item));
+                $parent->appendChild($node);
+                $this->jsonToDomDocumentItem($val, $node, $doc);
+// print "\n<br/>jsonToDomDocumentArray(): val=";
+// print_r($val);
+            }
+        } else if (is_array($el)) {
+            foreach ($el as $v) {
+                $n = 0;
+                $node = $doc->createElement("item");
+                $parent->appendChild($node);
+                $this->jsonToDomDocumentItem($v, $node, $doc);
+            }
+        } else {
+            $parent->textContent = $this->cleanXmlVal($el);
+        }
+    }
+
+    public function saveJson() {
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     static function tidyXML_OPT()
     {
         $topt = array();
