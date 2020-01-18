@@ -4,7 +4,6 @@ require_once(__DIR__ . "/class-test-base.php");
 
 final class xml_file_read_test extends test_base
 {
-
     public function testReadXML(): void
     {
         $tmp = $this->createTestXML();
@@ -14,4 +13,28 @@ final class xml_file_read_test extends test_base
 
         $this->assertEquals("Name #2", $result);
     }
+
+    public function testXMLFileCount(): void
+    {
+        $f = __DIR__ . '/resources/test-data-list.xml';
+        $subject = new xml_file($f);
+        $this->assertEquals(5, $subject->cnt("/*/item"));
+        $this->assertEquals(5, $subject->count_parts("/list/item"));
+    }
+
+    public function testXMLFileList(): void
+    {
+        $subject = new xml_file(__DIR__ . '\resources\test-data-list.xml');
+        $result = $subject->lst("//item");
+        $this->assertEquals(5, sizeof($result));
+        $this->assertTrue(strpos($result[2], "Name #3") !== false);
+    }
+
+    public function testXMLFileDef(): void
+    {
+        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $result = $subject->def("//item[@id=2]/name");
+        $this->assertEquals("<name>Name #2</name>", $result);
+    }
+
 }

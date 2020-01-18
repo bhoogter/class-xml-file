@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<list>
+  <item>
+    <name>Name #1</name>
+    <size>Small</size>
+  </item>
+  <item>
+    <name>Name #2</name>
+    <size>Medium</size>
+  </item>
+  <item>
+    <name>Name #3</name>
+    <size>Large</size>
+  </item>
+  <item>
+    <name>Name #4</name>
+    <size>XL</size>
+  </item>
+  <item>
+    <name>Name #5</name>
+    <size>XXL</size>
+  </item>
+</list>
