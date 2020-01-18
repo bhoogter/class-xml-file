@@ -37,4 +37,11 @@ final class xml_file_read_test extends test_base
         $this->assertEquals("<name>Name #2</name>", $result);
     }
 
+    public function testXMLFileSaveXML(): void
+    {
+        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $result = $subject->saveXML();
+        $this->assertTrue(strpos($result, "<name>Name #2</name>") !== false);
+    }
+
 }
