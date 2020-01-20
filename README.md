@@ -10,6 +10,10 @@ modifying contents, including creating new entries.
 1. Perform most standard operations without creating a new XML query object.
 1. Can automatically TIDY output on save, in a variety of pre-defined configurations (XML, XHTML)--or pass your own.
 
+## Additions
+
+1. Also loads and saves JSON strings / files and allows performing XPATH queries on them (because it internally converts it to XML).
+
 ## Credits
 
 Benjamin Hoogterp
