@@ -17,7 +17,7 @@ modifying contents, including creating new entries.
 
 ## Credits
 
-Benjamin Hoogterp
+Benjamin Hoogterp  
 http://www.BenjaminHoogterp.com
 
 ## License
