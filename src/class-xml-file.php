@@ -251,54 +251,17 @@ class xml_file
         return $r;
     }
 
-    function map_attributes($Path)
-    {
-    }
+    function map_attributes($Path)     {    }
 
-    function get($p)
-    {
-        return $this->fetch_part($p);
-    }
-
-    function set($p, $v)
-    {
-        return $this->set_part($p, $v);
-    }
-
-    function del($p)
-    {
-        return $this->delete_part($p);
-    }
-
-    function lst($p)
-    {
-        return $this->fetch_list($p);
-    }
-
-    function nod($p)
-    {
-        return $this->fetch_node($p);
-    }
-
-    function nds($p)
-    {
-        return $this->fetch_nodes($p);
-    }
-
-    function cnt($p)
-    {
-        return $this->count_parts($p);
-    }
-
-    function def($p)
-    {
-        return $this->part_string($p);
-    }
-
-    function map($p)
-    {
-        return $this->map_attributes($p);
-    }
+    function get($p)    {        return $this->fetch_part($p);    }
+    function set($p, $v)    {        return $this->set_part($p, $v);    }
+    function del($p)    {        return $this->delete_part($p);    }
+    function lst($p)    {        return $this->fetch_list($p);    }
+    function nod($p)    {        return $this->fetch_node($p);    }
+    function nds($p)    {        return $this->fetch_nodes($p);    }
+    function cnt($p)    {        return $this->count_parts($p);    }
+    function def($p)    {        return $this->part_string($p);    }
+    function map($p)    {        return $this->map_attributes($p);    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     static function XMLToDoc($XML)
@@ -317,10 +280,7 @@ class xml_file
         return $D;
     }
 
-    static function DocToXML($Doc)
-    {
-        return $Doc->saveXML();
-    }
+    static function DocToXML($Doc)    {        return $Doc->saveXML();    }
 
     static function DocElToDoc($El)
     {
@@ -759,14 +719,65 @@ class xml_file
         }
     }
 
-    public function saveJson() {
+    public static function saveJsonXslt() {
+        return <<<'EOC'
+<?xml version="1.0"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="text"/>
 
+    <xsl:template match="/">{
+        <xsl:apply-templates select="*"/>}
+    </xsl:template>
+    
+    <!-- Object or Element Property-->
+    <xsl:template match="*">
+        "<xsl:value-of select="name()"/>" : <xsl:call-template name="Properties"/>
+    </xsl:template>
+
+    <!-- Array Element -->
+    <xsl:template match="*" mode="ArrayElement">
+        <xsl:call-template name="Properties"/>
+    </xsl:template>
+
+    <!-- Object Properties -->
+    <xsl:template name="Properties">
+        <xsl:variable name="childName" select="name(*[1])"/>
+        <xsl:choose>
+            <xsl:when test="not(*|@*)">"<xsl:value-of select="."/>"</xsl:when>
+            <xsl:when test="count(*[name()=$childName]) > 1">{ "<xsl:value-of select="$childName"/>" :[<xsl:apply-templates select="*" mode="ArrayElement"/>] }</xsl:when>
+            <xsl:otherwise>{
+                <xsl:apply-templates select="@*"/>
+                <xsl:apply-templates select="*"/>
+    }</xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="following-sibling::*">,</xsl:if>
+    </xsl:template>
+
+    <!-- Attribute Property -->
+    <xsl:template match="@*">"<xsl:value-of select="name()"/>" : "<xsl:value-of select="."/>",
+    </xsl:template>
+</xsl:stylesheet>
+EOC;
     }
 
+    public function saveJson() {
+        $str = xml_file::transformXMLXSL_static($this->saveXML(), xml_file::saveJsonXslt())->saveXML();
+        $str = str_replace('<?xml version="1.0"?>', '', $str);
+        return self::tidyJson_string($str);
+   }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT) {
+        if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
+        $data = json_decode($json);
+        $result = json_encode($data, $options);
+print $result;
+        return $result;
+    }
 
     static function tidyXML_OPT()
     {
