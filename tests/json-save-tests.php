@@ -1,10 +1,6 @@
 <?php
-
 declare(strict_types=1);
-
 use PHPUnit\Framework\TestCase;
-
-include_once(__DIR__ . "/../src/stub.php");
 
 class json_save_tests extends TestCase
 {
