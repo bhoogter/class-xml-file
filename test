@@ -7,20 +7,11 @@ testFile() {
 	php ../phpunit-6.5.14.phar --bootstrap src/stub.php $1
 }
 
-testFileTest() {
-	php ../phpunit-6.5.14.phar --bootstrap src/stub.php --filter $2 $1
-}
-
 if [[ "$1" == "" ]]; then
 	for f in tests/*test.php; do
 		echo "test: $f"
 		testFile $f
 	done
 else
-	if [[ "$2" != "" ]]; then
-		testFile $1
-	else
-		testFileTest $1 $2
-	fi
-
+	testFile $1
 fi

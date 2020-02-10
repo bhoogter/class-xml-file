@@ -2,8 +2,6 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-include_once(__DIR__ . "/../src/stub.php");
-
 class json_read_tests extends TestCase
 {
     public function testjsonToDomDocument_jsonFileLoads(): void
