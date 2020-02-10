@@ -10,7 +10,7 @@ Author URI: http://www.BenjaminHoogterp.com/
 License: LGPLv3
 */
 
-class xml_file
+class xml_file extends xml_file_base
 {
     public $gid;
     public $Doc;
@@ -60,6 +60,8 @@ class xml_file
         unset($this->Doc);
         unset($this->XQuery);
     }
+
+    function type() { return get_class(); }
 
     function resolve_filename($fn)
     {
@@ -253,15 +255,15 @@ class xml_file
 
     function map_attributes($Path)     {    }
 
-    function get($p)    {        return $this->fetch_part($p);    }
-    function set($p, $v)    {        return $this->set_part($p, $v);    }
-    function del($p)    {        return $this->delete_part($p);    }
-    function lst($p)    {        return $this->fetch_list($p);    }
-    function nod($p)    {        return $this->fetch_node($p);    }
-    function nds($p)    {        return $this->fetch_nodes($p);    }
-    function cnt($p)    {        return $this->count_parts($p);    }
-    function def($p)    {        return $this->part_string($p);    }
-    function map($p)    {        return $this->map_attributes($p);    }
+    function get($p)        {        return $this->fetch_part($p);     }
+    function set($p, $v)    {        return $this->set_part($p, $v);   }
+    function del($p)        {        return $this->delete_part($p);    }
+    function lst($p)        {        return $this->fetch_list($p);     }
+    function nde($p)        {        return $this->fetch_node($p);     }
+    function nds($p)        {        return $this->fetch_nodes($p);    }
+    function cnt($p)        {        return $this->count_parts($p);    }
+    function def($p)        {        return $this->part_string($p);    }
+    function map($p)        {        return $this->map_attributes($p); }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     static function XMLToDoc($XML)

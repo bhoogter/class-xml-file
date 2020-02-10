@@ -1,9 +1,8 @@
 <?php
 
 spl_autoload_register(function ($name) {
-    if ("xml_file" == $name) {
-        $f = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src") . "/class-xml-file.php";
-        require_once($f);
-    }
+    $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
+    if ($name == "xml_file") require_once($d . "/class-xml-file.php");
+    if ($name == "xml_file_base") require_once($d . "/class-xml-file-base.php");
 });
 __HALT_COMPILER();
