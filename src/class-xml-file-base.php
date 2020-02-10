@@ -1,6 +1,6 @@
 <?php
 
-abstract class xml_file_base {
+abstract class xml_file_base implements xml_file_interface {
     public $ID;
     public $longdesc;
     public $shortdesc;
@@ -20,6 +20,7 @@ abstract class xml_file_base {
     abstract function load($src);
     abstract function save($f = '', $style = 'auto');
     abstract function can_save();
+    abstract function merge($scan, $root = null, $item = null, $persist = null);
 
     function node($p) { return $this->nde($p); }
     function nodes($p) { return $this->nds($p); }

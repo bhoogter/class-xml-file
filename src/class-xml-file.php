@@ -136,6 +136,68 @@ class xml_file extends xml_file_base
         return $x;
     }
 
+    function merge_list($scan)
+    {
+// print "\nxml_file::merge_list=";print_r($scan);
+        if (is_array($scan)) return $scan;
+        if (is_string($scan)) return glob($scan);
+        return array();
+    }
+
+    function merge_update_required($scan, $persist)
+    {
+        if (($persist ?? '') == '') return true;
+        $sysTime = 0;
+        $sysTime = @filemtime($persist);
+        if (!$sysTime) return true;
+//print "\n<br/>xml_file::merge_update_required - sysTime=$sysTime, aPath=$this->aPath";
+//print_r($this->merge_list());
+        foreach ($this->merge_list($scan) as $m)
+            if (@filemtime($m) > $sysTime) return true;
+        return false;
+    }
+
+    function merge_join_to_xml($scan, $root, $item, $persist)
+    {
+        $x  = "";
+        $x .= "<?xml version='1.0' encoding='iso-8859-1'?>\n";
+        $x .= "<$root>\n";
+
+// print "\n<br/>list="; print_r($this->get_module_list());
+        foreach ($this->merge_list($scan) as $m) {
+// print "\n<br/>m=$m";
+            $M = new xml_file($m);
+            $n = 0;
+            while (true) {
+                $n++;
+                $s = $M->part_string("/$root/$item[$n]");
+                if ($s == "") break;
+// print "\n<br/>s=$s";
+                $x .= $s;
+            }
+        }
+
+        $x .= "</$root>\n";
+
+        if (is_string($persist) && $persist != '') {
+            $D = new xml_file($x);
+            if (!$D->can_save($persist)) print "<br/>FAILED TO SAVE MASTER LIST";
+            $D->save($persist);
+        }
+
+// print "\n<br/>x=$x";
+        return $x;
+    }
+
+    function merge($scan, $root = null, $item = null, $persist = null)
+    {
+        if (!$this->merge_update_required($scan, $persist))
+            $this->load($persist);
+        else 
+            $this->loadXML($this->merge_join_to_xml($scan, $root, $item, $persist));
+    }
+
+
     function loadXML($x)
     {
         $this->clear();

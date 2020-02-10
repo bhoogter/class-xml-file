@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<information>
+    <set id='3'>
+       <x>7</x>
+       <y>8</y>
+       <z>9</z>
+    </set>
+    <set id='4'>
+       <x>10</x>
+       <y>11</y>
+       <z>12</z>
+    </set>
+</information>
