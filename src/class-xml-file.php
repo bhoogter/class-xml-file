@@ -157,27 +157,38 @@ class xml_file extends xml_file_base
         return false;
     }
 
-    function merge_join_to_xml($scan, $root, $item, $persist)
+    function merge_join_to_xml($scan, $root, $item, $target, $persist)
     {
-        $x  = "";
-        $x .= "<?xml version='1.0' encoding='iso-8859-1'?>\n";
-        $x .= "<$root>\n";
-
-// print "\n<br/>list="; print_r($this->get_module_list());
-        foreach ($this->merge_list($scan) as $m) {
-// print "\n<br/>m=$m";
-            $M = new xml_file($m);
-            $n = 0;
-            while (true) {
-                $n++;
-                $s = $M->part_string("/$root/$item[$n]");
-                if ($s == "") break;
-// print "\n<br/>s=$s";
-                $x .= $s;
-            }
+// print "\n<br/>xml_file::merge_join_to_xml(..., $root, $item, $persist)";
+        if (!$this->loaded) {
+            $x  = "";
+            $x .= "<?xml version='1.0' encoding='iso-8859-1'?>\n";
+            $x .= "<$root />\n";
+            $this->loadXML($x);
         }
 
-        $x .= "</$root>\n";
+// print "\n<br/>xml_file:: merge_join_to_xml - list="; print_r($this->merge_list($scan));
+        foreach ($this->merge_list($scan) as $m) {
+// print "\n<br/>xml_file::merge_join_to_xml - m=$m";
+            $M = new xml_file($m);
+            $n = 0;
+            while (++$n > 0) { // Always.  See break below.
+// print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
+// print "\n<br/>>xml_file::merge_join_to_xml - path = " . "/$root/${item}[$n]";
+                $node = $M->nde("/$root/${item}[$n]");
+// print "\n<br/>>xml_file::merge_join_to_xml - node = "; print_r($node);
+                if ($node == null) break;
+
+// print "\n<br/>xml_file::merge_join_to_xml - n=" . $M->saveXML($n);
+                $el = $this->Doc->importNode($node, true);
+
+                if ($target == null) 
+                    $this->Doc->documentElement->appendChild($el);
+                else
+                    $this->nde($target)->appendChild($el);
+// print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
+            }
+        }
 
         if (is_string($persist) && $persist != '') {
             $D = new xml_file($x);
@@ -185,18 +196,20 @@ class xml_file extends xml_file_base
             $D->save($persist);
         }
 
-// print "\n<br/>x=$x";
-        return $x;
+        return true;
     }
 
     function merge($scan, $root = null, $item = null, $persist = null)
     {
-        if (!$this->merge_update_required($scan, $persist))
-            $this->load($persist);
-        else 
-            $this->loadXML($this->merge_join_to_xml($scan, $root, $item, $persist));
+        if (!$this->merge_update_required($scan, $persist)) $this->load($persist);
+        else $this->merge_join_to_xml($scan, $root, $item, null, $persist);
     }
 
+    function merge_to($scan, $root = null, $item = null, $target = null, $persist = null)
+    {
+        if (!$this->merge_update_required($scan, $persist)) $this->load($persist);
+        else $this->merge_join_to_xml($scan, $root, $item, $target, $persist);
+    }
 
     function loadXML($x)
     {

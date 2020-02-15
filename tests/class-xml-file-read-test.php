@@ -37,6 +37,14 @@ final class xml_file_read_test extends test_base
         $this->assertEquals("<name>Name #2</name>", $result);
     }
 
+    public function testXMLFileNde(): void
+    {
+        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $result = $subject->nde("//item[@id=2]");
+        $this->assertTrue(is_object($result));
+        $this->assertEquals("DOMElement", get_class($result), "Node is returned");
+    }
+
     public function testXMLFileSaveXML(): void
     {
         $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
