@@ -12,8 +12,9 @@ modifying contents, including creating new entries.
 
 ## Additions
 
-- Also loads and saves JSON strings / files and allows performing XPATH queries on them (because it internally converts it to XML).
+- Load/save JSON strings/files.  Perform XPATH just like on XML (because it is internally converted to XML on load).  Save JSON <-> XML.
 - Tidy (both static and local) for both XML (if HTML Tidy is enabled, which it usually is) and JSON (via json_encode).
+- Merge multiple sources.  Pass it a glob, array, or wildcard path, along with scan directives to combine multiple sources into a single query-able XML.
 
 ## Credits
 
