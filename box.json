@@ -4,6 +4,8 @@
     "VERSION",
     "LICENSE",
     "src/class-xml-file.php",
+    "src/class-xml-file-base.php",
+    "src/class-xml-file-interface.php",
     "src/stub.php"
   ],
   "stub": "src/stub.php",
