@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-class xml_file_merge_test extends TestCase
+class properties_test extends TestCase
 {
     const SCAN_1 = __DIR__ . "/resources/test-xml-??.xml";
 
