@@ -17,6 +17,11 @@ interface xml_file_interface {
     function can_save();
     function merge($scan, $root = null, $item = null, $persist = null);
 
+    function get_property_list();
+    function has_property($field);
+    function get_property($field);
+    function set_property($field, $value);
+
     function node($p);
     function nodes($p);
     function fetch_node($p);

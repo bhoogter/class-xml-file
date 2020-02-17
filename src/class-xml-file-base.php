@@ -1,10 +1,7 @@
 <?php
 
 abstract class xml_file_base implements xml_file_interface {
-    public $ID;
-    public $longdesc;
-    public $shortdesc;
-    public $version;
+    public $metadata;
 
     abstract function type();
 
@@ -16,6 +13,17 @@ abstract class xml_file_base implements xml_file_interface {
     abstract function lst($p);
     abstract function cnt($p);
     abstract function del($p);
+
+    private function ensure_metadata() {
+        if (!is_array($this->metadata)) $this->metadata = [];
+        return $this->metadata;
+    }
+
+    public function init_metadata()              { /* Overridable */ }
+    public function get_property_list()          { return array_keys($this->ensure_metadata()); }
+    public function has_property($field)         { return in_array($field, $this->get_property_list()); }
+    public function get_property($field)         { return $this->ensure_metadata()[$field]; }
+    public function set_property($field, $value) { $this->ensure_metadata(); return $this->metadata[$field] = $value; }
 
     abstract function load($src);
     abstract function save($f = '', $style = 'auto');

@@ -108,6 +108,7 @@ class xml_file extends xml_file_base
             if ($this->stacktrace)
                 self::backtrace("Invalid Object Type: " . get_class($this->Doc));
         $this->XQuery = $this->loaded ? new DOMXPath($this->Doc) : null;
+        $this->init_metadata();
         return $this->loaded;
     }
 
