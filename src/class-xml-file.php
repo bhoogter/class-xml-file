@@ -26,9 +26,10 @@ class xml_file extends xml_file_base
     public $sourceDate;
     public $saveMethod;
 
+    function type() { return get_class(); }
     function __construct()
     {
-        $this->gid = uniqid("XMLFILE_");
+        $this->gid = uniqid($this->type() . "_");
         $this->clear();
         $n = func_num_args();
         $a = func_get_args();
@@ -61,7 +62,6 @@ class xml_file extends xml_file_base
         unset($this->XQuery);
     }
 
-    function type() { return get_class(); }
 
     function resolve_filename($fn)
     {
