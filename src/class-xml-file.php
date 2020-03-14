@@ -26,7 +26,7 @@ class xml_file extends xml_file_base
     public $sourceDate;
     public $saveMethod;
 
-    function type() { return get_class(); }
+    function type() { return get_class($this); }
     function __construct()
     {
         $this->gid = uniqid($this->type() . "_");
