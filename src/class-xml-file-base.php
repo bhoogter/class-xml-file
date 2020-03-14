@@ -1,7 +1,7 @@
 <?php
 
 abstract class xml_file_base implements xml_file_interface {
-    public $metadata;
+    private $metadata;
 
     abstract function type();
 
@@ -19,6 +19,7 @@ abstract class xml_file_base implements xml_file_interface {
         return $this->metadata;
     }
 
+    public function clear_metadata()             { unset($metadata); }
     public function init_metadata()              { /* Overridable */ }
     public function get_property_list()          { return array_keys($this->ensure_metadata()); }
     public function has_property($field)         { return in_array($field, $this->get_property_list()); }

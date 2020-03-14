@@ -75,6 +75,7 @@ class xml_file extends xml_file_base
         unset($this->sourceDate);
         unset($this->Doc);
         unset($this->XQuery);
+        $this->clear_metadata();
         $this->loaded = false;
         $this->filename = "";
         $this->mode = "";
