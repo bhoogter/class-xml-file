@@ -2,9 +2,9 @@
 
 /*
 Module Name:  xml_file
-Module Source: http://www.moreglory.net/
+Module Source: http://www.github.com/bhoogter/xml-file
 Description: A convenient XML file wrapper designed for datastore and retrieval.
-Version: 1.0
+Version: 0.2.70
 Author: Benjamin Hoogterp
 Author URI: http://www.BenjaminHoogterp.com/
 License: LGPLv3
@@ -854,7 +854,7 @@ EOC;
         if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
         $data = json_decode($json);
         $result = json_encode($data, $options);
-print $result;
+// print $result;
         return $result;
     }
 
@@ -976,6 +976,14 @@ print $result;
                 $s = preg_replace("\$\<.xml (.)*?\>\$", "", $s);
         }
         return $s;
+    }
+
+    static function nodeXml($element) {
+        return $element->ownerDocument->saveXML($element);
+    }
+
+    static function nodeXmlFile($element) {
+        return new xml_file(self::nodeXml($element));
     }
 
     static function backtrace($m = '')
