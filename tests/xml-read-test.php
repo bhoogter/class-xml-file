@@ -39,6 +39,8 @@ final class xml_read_test extends test_base
 
     public function testXMLFileNde(): void
     {
+        print __DIR__ . '\resources\test-data.xml';
+        print file_get_contents(__DIR__ . '\resources\test-data.xml');
         $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
         $this->assertTrue($subject->loaded);
         $result = $subject->nde("//item[@id=2]");
