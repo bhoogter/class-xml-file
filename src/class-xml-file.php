@@ -36,7 +36,7 @@ class xml_file extends xml_file_base
         if ($n >= 1) {
             if (is_string($a[0])) {
                 if (substr($a[0], 0, 1) == "<") $this->loadXML($a[0]);
-                else if (file_exists($a[0])) $this->load(self::resolve_filename($a[0]));
+                else $this->load($a[0]);
             }
             if (is_object($a[0])) {
                 if (is_a($a[0], "DomDocument")) $this->loadDoc($a[0]);
