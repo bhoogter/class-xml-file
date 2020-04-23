@@ -36,14 +36,14 @@ class xml_file extends xml_file_base
         if ($n >= 1) {
             if (is_string($a[0])) {
                 if (substr($a[0], 0, 1) == "<") $this->loadXML($a[0]);
-                else if (file_exists($a[0])) $this->load($a[0]);
+                else if (file_exists($a[0])) $this->load(self::resolve_filename($a[0]));
             }
             if (is_object($a[0])) {
                 if (is_a($a[0], "DomDocument")) $this->loadDoc($a[0]);
                 if (is_a($a[0], "DomNode")) $this->loadDoc(self::nodeXmlDoc($a[0]));
                 if (is_a($a[0], get_class())) {
                     if ($a[0]->loaded) {
-                        if ($a[0]->filename && $a[0]->filename != '') $this->load($a[0]->filename);
+                        if ($a[0]->filename && $a[0]->filename != '') $this->load(self::resolve_filename($a[0]->filename));
                         else $this->loadXML($a[0]->saveXML());
                     }
                 }
@@ -72,9 +72,9 @@ class xml_file extends xml_file_base
     }
 
 
-    function resolve_filename($fn)
+    static function resolve_filename($fn)
     {
-        if (file_exists($fn)) return $fn;
+        if (file_exists(realpath($fn))) return realpath($fn);
         if (file_exists($r = "source/$fn")) return $r;
         return $fn;     //  nothing else to try....
     }
@@ -134,13 +134,11 @@ class xml_file extends xml_file_base
         } catch (Exception $e) {
             $this->err = $e->getMessage();
             $res = false;
-        }
-
-        if ($res === false) {
             echo "<br />Failed to read: $file\n";
             if ($this->stacktrace) throw new Exception("Failed to read: $file");
             return $this->clear();
         }
+
         $x = $this->init(filemtime($file));
         return $x;
     }
