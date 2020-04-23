@@ -50,8 +50,6 @@ class transform_test extends TestCase
     {
         $x = file_get_contents(self::XML_FILE);
         $y = file_get_contents(self::XSL_FILE);
-        print($x);
-        print($y);
         $result = xml_file::transformXMLXSL_static($x, $y);
         $this->assertTrue(strpos($result->saveXML(), "Collection") !== false);
     }
