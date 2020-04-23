@@ -40,6 +40,7 @@ final class xml_read_test extends test_base
     public function testXMLFileNde(): void
     {
         $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $this->assertTrue($subject->loaded);
         $result = $subject->nde("//item[@id=2]");
         $this->assertTrue(is_object($result));
         $this->assertEquals("DOMElement", get_class($result), "Node is returned");
