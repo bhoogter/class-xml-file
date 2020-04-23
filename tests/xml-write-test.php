@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/class-test-base.php");
 
-final class xml_file_write_test extends test_base
+final class xml_write_test extends test_base
 {
 
     public function testWriteNewItemToXML(): void

@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/class-test-base.php");
 
-final class xml_file_read_test extends test_base
+final class xml_read_test extends test_base
 {
     public function testReadXML(): void
     {
