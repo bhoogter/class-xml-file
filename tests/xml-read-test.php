@@ -24,7 +24,7 @@ final class xml_read_test extends test_base
 
     public function testXMLFileList(): void
     {
-        $subject = new xml_file(__DIR__ . '\resources\test-data-list.xml');
+        $subject = new xml_file(__DIR__ . '/resources/test-data-list.xml');
         $result = $subject->lst("//item");
         $this->assertEquals(5, sizeof($result));
         $this->assertTrue(strpos($result[2], "Name #3") !== false);
@@ -32,16 +32,16 @@ final class xml_read_test extends test_base
 
     public function testXMLFileDef(): void
     {
-        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $subject = new xml_file(__DIR__ . '/resources/test-data.xml');
         $result = $subject->def("//item[@id=2]/name");
         $this->assertEquals("<name>Name #2</name>", $result);
     }
 
     public function testXMLFileNde(): void
     {
-        print __DIR__ . '\resources\test-data.xml';
-        print file_get_contents(__DIR__ . '\resources\test-data.xml');
-        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        print __DIR__ . '/resources/test-data.xml';
+        print file_get_contents(__DIR__ . '/resources/test-data.xml');
+        $subject = new xml_file(__DIR__ . '/resources/test-data.xml');
         $this->assertTrue($subject->loaded);
         $result = $subject->nde("//item[@id=2]");
         $this->assertTrue(is_object($result));
@@ -50,7 +50,7 @@ final class xml_read_test extends test_base
 
     public function testXMLFileSaveXML(): void
     {
-        $subject = new xml_file(__DIR__ . '\resources\test-data.xml');
+        $subject = new xml_file(__DIR__ . '/resources/test-data.xml');
         $result = $subject->saveXML();
         $this->assertTrue(strpos($result, "<name>Name #2</name>") !== false);
         $this->assertTrue(strpos($result, "<name>Name #1</name>") !== false);
