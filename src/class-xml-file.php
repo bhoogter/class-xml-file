@@ -115,8 +115,7 @@ class xml_file extends xml_file_base
         $this->sourceDate = $D == 0 ? time() : $D;
         $this->loaded = isset($this->Doc);
         if (get_class($this->Doc) != "DOMDocument")
-            if ($this->stacktrace)
-                self::backtrace("Invalid Object Type: " . get_class($this->Doc));
+            if ($this->stacktrace) throw new Exception("Invalid Object Type: " . get_class($this->Doc));
         $this->XQuery = $this->loaded ? new DOMXPath($this->Doc) : null;
         $this->init_metadata();
         return $this->loaded;
@@ -139,8 +138,7 @@ class xml_file extends xml_file_base
 
         if ($res === false) {
             echo "<br />Failed to read: $file\n";
-            if ($this->stacktrace)
-                self::backtrace("Failed to read: $file");
+            if ($this->stacktrace) throw new Exception("Failed to read: $file");
             return $this->clear();
         }
         $x = $this->init(filemtime($file));
@@ -249,9 +247,8 @@ class xml_file extends xml_file_base
     function saveXML($style = "auto")
     {
         if (!isset($this->Doc)) {
-            if ($this->stacktrace)
-                self::backtrace();
-            die("<br/><b><u>XMLFILE</u>::saveXML:</b> No Doc for save, $this");
+            if ($this->stacktrace) throw new Exception("No doc for save");
+            return "";
         }
         $s = $this->Doc->saveXML();
         if (!$this->notidy)
@@ -1021,11 +1018,5 @@ EOC;
                 $s = preg_replace("\$\<.xml (.)*?\>\$", "", $s);
         }
         return $s;
-    }
-
-    static function backtrace($m = '')
-    {
-        print "ERROR: $m";
-        debug_print_backtrace();
     }
 }
