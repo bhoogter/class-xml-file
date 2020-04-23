@@ -38,7 +38,16 @@ class xml_file extends xml_file_base
                 if (substr($a[0], 0, 1) == "<") $this->loadXML($a[0]);
                 else if (file_exists($a[0])) $this->load($a[0]);
             }
-            if (is_object($a[0])) $this->loadDoc($a[0]);
+            if (is_object($a[0])) {
+                if (is_a($a[0], "DomDocument")) $this->loadDoc($a[0]);
+                if (is_a($a[0], "DomNode")) $this->loadDoc(self::nodeXmlDoc($a[0]));
+                if (is_a($a[0], get_class())) {
+                    if ($a[0]->loaded) {
+                        if ($a[0]->filename && $a[0]->filename != '') $this->load($a[0]->filename);
+                        else $this->loadXML($a[0]->saveXML());
+                    }
+                }
+            }
         } else {
         }
         if ($n >= 2) {
@@ -343,38 +352,94 @@ class xml_file extends xml_file_base
     function map($p)        {        return $this->map_attributes($p); }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    static function XMLToDoc($XML)
+    public static function XMLToDoc($XML)
     {
-        if ($XML == '') return null;
+        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".gettype($XML));
         $XML = self::make_tidy_string($XML);
         $D = new DOMDocument;
         $D->loadXML($XML);
         return $D;
     }
 
-    static function FileToDoc($f)
+    public static function FileToDoc($f)
     {
+        if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got ".gettype($f));
+        if (!file_exists($f)) throw new Exception("File not found: $f");
         $D = new DOMDocument;
         $D->load($f);
         return $D;
     }
 
-    static function DocToXML($Doc)    {        return $Doc->saveXML();    }
-
-    static function DocElToDoc($El)
+    public static function DocToXML($Doc)
     {
-        $x = $El->ownerDocument->saveXML($El);
+        if (!is_object($Doc) || !is_a($Doc, "DOMDocument")) throw new Exception("Invalid Argument 1 to DocToXML.  Expected DOMDocument, got ".get_class($Doc));
+        return $Doc->saveXML();
+    }
+
+    public static function DocElToDoc($el)
+    {
+        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to DocElToDoc");
+        $x = $el->ownerDocument->saveXML($el);
         return self::XMLToDoc($x);
     }
 
-    static function transform_static($Doc, $f, $doRegister = true)
+    public static function nodeXml($el) {
+        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXml");
+        return $el->ownerDocument->saveXML($el);
+    }
+
+    public static function nodeXmlFile($el) {
+        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXmlFile");
+        return new xml_file(self::nodeXml($el));
+    }
+
+    public static function nodeXmlDoc($el) {
+        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXmlDoc");
+        return self::nodeXmlFile($el)->Doc;
+    }
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+    static function toXmlFile($k) {
+        return new xml_file($k);
+    }
+
+    static function toDoc($k)
     {
-        if (!file_exists($f)) return false;
-        if (!$Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transform_static()");
-        if (get_class($Doc) != "DOMDocument") self::backtrace("DOMDocument not supplied in xml_file::transform_static()");
+        if (is_string($k)) {
+            if (file_exists($k)) return self::FileToDoc($k);
+            else if (substr(trim($k), 0, 1) == '<') self::XMLToDoc($k);
+        } else if (is_object($k)) {
+            if (is_a($k, "DomDocument")) return $k;
+            else if (is_a($k, "DomNode")) return self::nodeXmlDoc($k);
+            else if (is_a($k, get_class())) return $k->Doc;
+        }
+        return null;
+    }
+
+    static function toXML($k)
+    {
+        if (is_string($k)) {
+            if (file_exists($k)) return self::FileToDoc($k);
+            else if (substr(trim($k), 0, 1) == '<') self::XMLToDoc($k);
+        } else if (is_object($k)) {
+            if (is_a($k, "DomDocument")) return $k;
+            else if (is_a($k, "DomNode")) return self::nodeXmlDoc($k);
+            else if (is_a($k, get_class())) return $k->Doc;
+        }
+        return null;
+    }
+
+    static function transform_static($src, $f, $doRegister = true)
+    {
+        if (!($Doc = self::toDoc($src))) 
+            throw new Exception("Missing arg 1 for transform_static. Expected filename, xml_file, domdocument, etc.  Got ".gettype($src));
+        if (!($xsl = self::toDoc($f)))
+            throw new Exception("Missing arg 2 for transform_static. Expected filename, xml_file, domdocument, etc.  Got ".gettype($f));
+
         $xh = new XsltProcessor();
-        $xsl = new DomDocument;
-        $xsl->load($f);
         if ($doRegister) $xh->registerPHPFunctions();
         $xh->importStyleSheet($xsl);
         $D = $xh->transformToDoc($Doc);
@@ -384,33 +449,13 @@ class xml_file extends xml_file_base
     }
 
     static function transformXSL_static($f, $XSL, $doRegister = true)
-    {
-        if (is_string($f)) {
-            $f = new DomDocument;
-            if (file_exists($f)) $f->load($f);
-            else $f->loadXML($f);
-        }
-        if (!$f) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transformXSL_static()");
-        $xh = new XsltProcessor();
-        $xsl = new DomDocument;
-        $xsl->loadXML($XSL);
-        if ($doRegister) $xh->registerPHPFunctions();
-        $xh->importStyleSheet($xsl);
-        $D = $xh->transformToDoc($f);
-        unset($xh);
-        unset($xsl);
-        return $D;
-    }
+    {         return self::transform_static($f, self::XMLToDoc($XSL), $doRegister);    }
 
     static function transformXML_static($XML, $f, $doRegister = true)
-    {
-        return xml_file::transform_static(xml_file::XMLToDoc($XML), $f, $doRegister);
-    }
+    {        return xml_file::transform_static(xml_file::XMLToDoc($XML), $f, $doRegister);    }
 
     static function transformXMLXSL_static($XML, $XSL, $doRegister = true)
-    {
-        return xml_file::transformXSL_static(xml_file::XMLToDoc($XML), $XSL, $doRegister);
-    }
+    {        return xml_file::transform_static(xml_file::XMLToDoc($XML), xml_file::XMLToDoc($XSL), $doRegister); }
 
     static function NodeToString($node, $part = "all")
     {
@@ -431,32 +476,32 @@ class xml_file extends xml_file_base
         }
     }
 
+    function transformToDoc($f, $doRegister = true)
+    {
+        if (!($f = self::toDoc($f)))
+            throw new Exception("Invalid argument 1 to transform().");
+
+        $xh = new XsltProcessor();
+        if ($doRegister) $xh->registerPHPFunctions();
+        $xh->importStyleSheet($f);
+        $result = $xh->transformToDoc($this->Doc);
+        unset($xh);
+        return $result;
+    }
+
     function transform($f, $doRegister = true)
     {
-        if (!file_exists($f)) return false;
-        if (!$this->Doc) self::backtrace("NO DOC TO TO TRANSFORM IN xml_file::transform()");
-        $xh = new XsltProcessor();
-        $xsl = new DomDocument;
-        $xsl->load($f);
-        if ($doRegister) $xh->registerPHPFunctions();
-        $xh->importStyleSheet($xsl);
-        $this->Doc = $xh->transformToDoc($this->Doc);
-        unset($xh);
-        unset($xsl);
+        $this->Doc = $this->transformToDoc($f, $doRegister);
         return true;
     }
 
-    function transformXSL($xsl, $doRegister = true)
+    function transformXSL($xslt, $doRegister = true)
     {
-        $xh = new XsltProcessor();
         $xsl = new DomDocument;
-        $xsl->loadXML($xsl);
-        if ($doRegister) $xh->registerPHPFunctions();
-        $xh->importStyleSheet($xsl);
-        $this->Doc = $xh->transformToDoc($this->Doc);
-        unset($xh);
+        $xsl->loadXML($xslt);
+        $result = $this->transform($xsl, $doRegister);
         unset($xsl);
-        return true;
+        return $result;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -976,14 +1021,6 @@ EOC;
                 $s = preg_replace("\$\<.xml (.)*?\>\$", "", $s);
         }
         return $s;
-    }
-
-    static function nodeXml($element) {
-        return $element->ownerDocument->saveXML($element);
-    }
-
-    static function nodeXmlFile($element) {
-        return new xml_file(self::nodeXml($element));
     }
 
     static function backtrace($m = '')
