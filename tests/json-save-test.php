@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-class json_save_tests extends TestCase
+class json_save_test extends TestCase
 {
     public function testjsonToDomDocument_xsltIsValidFormed(): void
     {
@@ -31,6 +31,7 @@ class json_save_tests extends TestCase
         $subject->loadJson(__DIR__ . "/resources/test-json-simple.json", "jsonData");
         $this->assertTrue($subject->loaded);
 
+        // print "\nXML: ". $subject->saveXML();
         $result = $subject->saveJson();
         $this->assertTrue(strpos($result, '"c": "4.5",') !== false);
         $this->assertTrue(strpos($result, '"cc": "44.55",') !== false);

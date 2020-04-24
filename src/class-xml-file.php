@@ -856,27 +856,30 @@ class xml_file extends xml_file_base
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="text"/>
+    <xsl:variable name='q'>"</xsl:variable>
 
-    <xsl:template match="/">{
-        <xsl:apply-templates select="*"/>}
+    <xsl:template match="/">
+    {
+        <xsl:apply-templates select="*"/>
+    }
     </xsl:template>
     
-    <!-- Object or Element Property-->
     <xsl:template match="*">
-        "<xsl:value-of select="name()"/>" : <xsl:call-template name="Properties"/>
+        <xsl:value-of select='concat($q, name(), $q, ": ")' />
+        <xsl:call-template name="Properties"/>
     </xsl:template>
 
-    <!-- Array Element -->
     <xsl:template match="*" mode="ArrayElement">
         <xsl:call-template name="Properties"/>
     </xsl:template>
 
-    <!-- Object Properties -->
     <xsl:template name="Properties">
         <xsl:variable name="childName" select="name(*[1])"/>
         <xsl:choose>
-            <xsl:when test="not(*|@*)">"<xsl:value-of select="."/>"</xsl:when>
-            <xsl:when test="count(*[name()=$childName]) > 1">{ "<xsl:value-of select="$childName"/>" :[<xsl:apply-templates select="*" mode="ArrayElement"/>] }</xsl:when>
+            <xsl:when test="not(*|@*)"><xsl:value-of select="concat($q, ., $q)"/></xsl:when>
+            <xsl:when test="count(*[name()=$childName]) > 1">{ 
+                <xsl:value-of select="concat($q, $childName, $q)"/>:[<xsl:apply-templates select="*" mode="ArrayElement"/>] 
+            }</xsl:when>
             <xsl:otherwise>{
                 <xsl:apply-templates select="@*"/>
                 <xsl:apply-templates select="*"/>
@@ -886,14 +889,15 @@ class xml_file extends xml_file_base
     </xsl:template>
 
     <!-- Attribute Property -->
-    <xsl:template match="@*">"<xsl:value-of select="name()"/>" : "<xsl:value-of select="."/>",
+    <xsl:template match="@*"><xsl:value-of select="concat($q, name(), q)"/>: "<xsl:value-of select="."/>",
     </xsl:template>
 </xsl:stylesheet>
 EOC;
     }
 
     public function saveJson() {
-        $str = xml_file::transformXMLXSL_static($this->saveXML(), xml_file::saveJsonXslt())->saveXML();
+// print "\nXML=".$this->saveXML();
+        $str = xml_file::docXml(xml_file::transformXMLXSL_static($this->saveXML(), xml_file::saveJsonXslt()));
         $str = str_replace('<?xml version="1.0"?>', '', $str);
         return self::tidyJson_string($str);
    }
@@ -903,11 +907,14 @@ EOC;
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT) {
+    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) {
         if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
+        if ($json == '') return "";
+// print "\nINPUT=".print_r($json, true);
         $data = json_decode($json);
+// print "\nDATA=".print_r($data, true);
         $result = json_encode($data, $options);
-// print $result;
+// print "\nRESULT=$result";
         return $result;
     }
 

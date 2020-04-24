@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-class json_read_tests extends TestCase
+class json_read_test extends TestCase
 {
     public function testjsonToDomDocument_jsonFileLoads(): void
     {

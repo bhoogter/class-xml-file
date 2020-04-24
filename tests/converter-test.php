@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class converters_test extends TestCase
+class converter_test extends TestCase
 {
     const XML_TEXT = "<?xml version='1.0' ?>\n<a><b><c /></b><d /></a>";
     const XML_FILE = __DIR__ . "/resources/test-xml-01.xml";

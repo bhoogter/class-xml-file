@@ -2,7 +2,7 @@
 declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
-class node_xml_tests extends TestCase
+class node_xml_test extends TestCase
 {
     public function testNodeXml(): void
     {
