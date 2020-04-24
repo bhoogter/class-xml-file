@@ -26,6 +26,11 @@ class xml_file extends xml_file_base
     public $sourceDate;
     public $saveMethod;
 
+    private const cDOMDocument = "DOMDocument";
+    private const cDOMElement = "DOMElement";
+    private const cDOMNode = "DOMNode";
+
+
     function type() { return get_class($this); }
     function __construct()
     {
@@ -39,9 +44,9 @@ class xml_file extends xml_file_base
                 else $this->load($a[0]);
             }
             if (is_object($a[0])) {
-                if (is_a($a[0], "DomDocument")) $this->loadDoc($a[0]);
-                if (is_a($a[0], "DomNode")) $this->loadDoc(self::nodeXmlDoc($a[0]));
-                if (is_a($a[0], get_class())) {
+                if (is_a($a[0], self::cDOMDocument)) $this->loadDoc($a[0]);
+                else if (is_a($a[0], self::cDOMElement)) $this->loadDoc(self::nodeXmlDoc($a[0]));
+                else if (is_a($a[0], get_class())) {
                     if ($a[0]->loaded) {
                         if ($a[0]->filename && $a[0]->filename != '') $this->load(self::resolve_filename($a[0]->filename));
                         else $this->loadXML($a[0]->saveXML());
@@ -114,7 +119,7 @@ class xml_file extends xml_file_base
     {
         $this->sourceDate = $D == 0 ? time() : $D;
         $this->loaded = isset($this->Doc);
-        if (get_class($this->Doc) != "DOMDocument")
+        if (get_class($this->Doc) != self::cDOMDocument)
             if ($this->stacktrace) throw new Exception("Invalid Object Type: " . get_class($this->Doc));
         $this->XQuery = $this->loaded ? new DOMXPath($this->Doc) : null;
         $this->init_metadata();
@@ -349,7 +354,7 @@ class xml_file extends xml_file_base
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static function XMLToDoc($XML)
     {
-        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".gettype($XML));
+        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".print_r($f, true));
         $XML = self::make_tidy_string($XML);
         $D = new DOMDocument;
         $D->loadXML($XML);
@@ -358,7 +363,7 @@ class xml_file extends xml_file_base
 
     public static function FileToDoc($f)
     {
-        if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got ".gettype($f));
+        if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got ".print_r($f, true));
         if (!file_exists($f)) throw new Exception("File not found: $f");
         $D = new DOMDocument;
         $D->load($f);
@@ -367,29 +372,37 @@ class xml_file extends xml_file_base
 
     public static function DocToXML($Doc)
     {
-        if (!is_object($Doc) || !is_a($Doc, "DOMDocument")) throw new Exception("Invalid Argument 1 to DocToXML.  Expected DOMDocument, got ".get_class($Doc));
+        if (!is_object($Doc) || !is_a($Doc, self::cDOMDocument)) throw new Exception("Invalid Argument 1 to DocToXML.  Expected DOMDocument, got ".get_class($Doc));
         return $Doc->saveXML();
     }
 
     public static function DocElToDoc($el)
     {
-        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to DocElToDoc");
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to DocElToDoc.  Expected DOMElement, got ".get_class($el));
         $x = $el->ownerDocument->saveXML($el);
         return self::XMLToDoc($x);
     }
 
+    public static function xmlDoc($XML) { return self::XMLToDoc($XML); }
+    public static function docXml($el) { return self::DocToXML($el); }
+
+    public static function docXmlFile($el) {
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got ".get_class($el));
+        return $el->ownerDocument->saveXML($el);
+    }
+
     public static function nodeXml($el) {
-        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXml");
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got ".get_class($el));
         return $el->ownerDocument->saveXML($el);
     }
 
     public static function nodeXmlFile($el) {
-        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXmlFile");
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlFile.  Expected DOMElement, got ".get_class($el));
         return new xml_file(self::nodeXml($el));
     }
 
     public static function nodeXmlDoc($el) {
-        if (!is_object($el) || !is_a($el, "DOMElement")) throw new Exception("Invalid argument 1 to nodeXmlDoc");
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlDoc.  Expected DOMElement, got ".get_class($el));
         return self::nodeXmlFile($el)->Doc;
     }
 
@@ -405,10 +418,10 @@ class xml_file extends xml_file_base
     {
         if (is_string($k)) {
             if (file_exists($k)) return self::FileToDoc($k);
-            else if (substr(trim($k), 0, 1) == '<') self::XMLToDoc($k);
+            else if (substr(trim($k), 0, 1) == '<') return self::XMLToDoc($k);
         } else if (is_object($k)) {
-            if (is_a($k, "DomDocument")) return $k;
-            else if (is_a($k, "DomNode")) return self::nodeXmlDoc($k);
+            if (is_a($k, self::cDOMDocument)) return $k;
+            else if (is_a($k, self::cDOMElement)) return self::nodeXmlDoc($k);
             else if (is_a($k, get_class())) return $k->Doc;
         }
         return null;
@@ -417,12 +430,12 @@ class xml_file extends xml_file_base
     static function toXML($k)
     {
         if (is_string($k)) {
-            if (file_exists($k)) return self::FileToDoc($k);
-            else if (substr(trim($k), 0, 1) == '<') self::XMLToDoc($k);
+            if (file_exists($k)) return file_get_contents($k);
+            else if (substr(trim($k), 0, 1) == '<') return $k;
         } else if (is_object($k)) {
-            if (is_a($k, "DomDocument")) return $k;
-            else if (is_a($k, "DomNode")) return self::nodeXmlDoc($k);
-            else if (is_a($k, get_class())) return $k->Doc;
+            if (is_a($k, self::cDOMDocument)) return self::docXml($k);
+            else if (is_a($k, self::cDOMElement)) return self::nodeXml($k);
+            else if (is_a($k, get_class())) return $k->saveXML();
         }
         return null;
     }
