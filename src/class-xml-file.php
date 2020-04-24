@@ -899,7 +899,8 @@ EOC;
 // print "\nXML=".$this->saveXML();
         $str = xml_file::docXml(xml_file::transformXMLXSL_static($this->saveXML(), xml_file::saveJsonXslt()));
         $str = str_replace('<?xml version="1.0"?>', '', $str);
-        return self::tidyJson_string($str);
+        $result = self::tidyJson_string($str);
+        return $result ? $result : $str;  // in case tidy fails
    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -907,7 +908,7 @@ EOC;
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) {
+    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT) {
         if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
         if ($json == '') return "";
 // print "\nINPUT=".print_r($json, true);
