@@ -440,6 +440,8 @@ class xml_file extends xml_file_base
         return null;
     }
 
+    static function toJson($k) { return self::toXmlFile($k)->saveJson(); }
+
     static function transform_static($src, $f, $doRegister = true)
     {
         if (!($Doc = self::toDoc($src))) 
@@ -940,7 +942,7 @@ EOC;
             <xsl:for-each select='/*/row'>
                 {
                 <xsl:for-each select='field'>
-                    <xsl:value-of select='concat($q, @id, $q)' />: <xsl:value-of select='concat($q, ., $q)' />
+                    <xsl:value-of select='concat($q, @id, $q)' />: <xsl:value-of select='concat($q, normalize-space(.), $q)' />
                     <xsl:if test="following-sibling::*">,</xsl:if>
                 </xsl:for-each>
                 }
@@ -959,11 +961,11 @@ EOC;
         }
     }
 
-    public function saveJson($mode = '') {
+    public function saveJson($mode = '', $options = JSON_PRETTY_PRINT) {
         $str = self::docXml(self::transformXMLXSL_static($this->saveXML(), self::saveJsonStylesheet($mode)));
         $str = str_replace('<?xml version="1.0"?>', '', $str);
-        // $str = str_replace("\n", '', $str);
-        $result = self::tidyJson_string($str);
+        $str = str_replace("\n", '', $str);
+        $result = self::tidyJson_string($str, $options);
         return $result !== false ? $result : $str;  // in case tidy fails
    }
 
@@ -975,13 +977,11 @@ EOC;
     static function tidyJson_string($json, $options = JSON_PRETTY_PRINT) {
         if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
         if ($json == '') return "";
-// print "\nINPUT=".print_r($json, true);
+
         $data = json_decode($json);
         if ($data == null) return $json;
-// print "\nDATA=".print_r($data, true);
-        $result = json_encode($data, $options);
-// print "\nRESULT=$result";
-        return $result;
+
+        return json_encode($data, $options);
     }
 
     static function tidyXML_OPT()

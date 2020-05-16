@@ -51,7 +51,7 @@ class json_save_test extends TestCase
     {
         $subject = new xml_file(__DIR__ . "/resources/recordset.xml");
         $result = $subject->saveJson();
-        // print xml_file::tidyJson_string($result);  
+        // print xml_file::tidyJson_string($result);
 
         $this->assertNotNull($result);
         $this->assertTrue(false !== strpos($result, '"id": "option1"'));
@@ -62,7 +62,7 @@ class json_save_test extends TestCase
         $subject = new xml_file(__DIR__ . "/resources/recordset.xml");
         $result = $subject->saveJson('recordset');
 
-        // print($result);
+        print($result);
         $this->assertNotNull($result);
     }
 }
