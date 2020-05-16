@@ -1,12 +1,21 @@
 <?php
+
 declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 
 class json_save_test extends TestCase
 {
-    public function testjsonToDomDocument_xsltIsValidFormed(): void
+    public function testjsonToDomDocument_xslt_isValidFormed(): void
     {
-        $result = xml_file::saveJsonXslt();
+        $result = xml_file::saveJsonXsltStandard();
+        $subject = new xml_file($result);
+        $this->assertTrue($subject->loaded);
+    }
+
+    public function testjsonToDomDocument_xsltRecordset_isValidFormed(): void
+    {
+        $result = xml_file::saveJsonXsltRecordset();
         $subject = new xml_file($result);
         $this->assertTrue($subject->loaded);
     }
@@ -31,9 +40,28 @@ class json_save_test extends TestCase
         $subject->loadJson(__DIR__ . "/resources/test-json-simple.json", "jsonData");
         $this->assertTrue($subject->loaded);
 
-        // print "\nXML: ". $subject->saveXML();
+// print "\nXML: ". $subject->saveXML();
         $result = $subject->saveJson();
+// print "\nJSON: ". $result;
         $this->assertTrue(strpos($result, '"c": "4.5",') !== false);
         $this->assertTrue(strpos($result, '"cc": "44.55",') !== false);
+    }
+
+    public function testSaveXMLRecordsetToJson()
+    {
+        $subject = new xml_file(__DIR__ . "/resources/recordset.xml");
+        $result = $subject->saveJson();
+
+        $this->assertNotNull($result);
+        $this->assertTrue(false !== strpos($result, '"@id": "option1"'));
+    }
+
+    public function testSaveXMLRecordsetToJsonRecordset()
+    {
+        $subject = new xml_file(__DIR__ . "/resources/recordset.xml");
+        $result = $subject->saveJson('recordset');
+
+        print($result);
+        $this->assertNotNull($result);
     }
 }

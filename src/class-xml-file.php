@@ -851,56 +851,88 @@ class xml_file extends xml_file_base
         }
     }
 
-    public static function saveJsonXslt() {
+    public static function saveJsonXsltStandard() {
         return <<<'EOC'
-<?xml version="1.0"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:output method="text"/>
-    <xsl:variable name='q'>"</xsl:variable>
-
-    <xsl:template match="/">
-    {
-        <xsl:apply-templates select="*"/>
+                <?xml version="1.0"?>
+                <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                    <xsl:output method="text"/>
+                    <xsl:variable name='q'>"</xsl:variable>
+                <!-- -->
+                    <xsl:template match="/">{
+                        <xsl:apply-templates select="*"/>}
+                    </xsl:template>
+                <!-- -->
+                    <!-- Object or Element Property-->
+                    <xsl:template match="*">
+                        <xsl:value-of select='concat($q, name(), $q, ": ")' /><xsl:call-template name="Properties"/>
+                    </xsl:template>
+                <!-- -->
+                    <!-- Array Element -->
+                    <xsl:template match="*" mode="ArrayElement">
+                        <xsl:call-template name="Properties"/>
+                    </xsl:template>
+                <!-- -->
+                    <!-- Object Properties -->
+                    <xsl:template name="Properties">
+                        <xsl:variable name="childName" select="name(*[1])"/>
+                        <xsl:choose>
+                            <xsl:when test="not(*|@*)"><xsl:value-of select='concat($q, ., $q)' /></xsl:when>
+                            <xsl:when test="count(*[name()=$childName]) > 1"><xsl:value-of select='concat("{ ", $q, $childName, $q, ": ")' /> [<xsl:apply-templates select="*" mode="ArrayElement"/>] }</xsl:when>
+                            <xsl:otherwise>{
+                                <xsl:apply-templates select="@*"/>
+                                <xsl:apply-templates select="*"/>
+                    }</xsl:otherwise>
+                        </xsl:choose>
+                        <xsl:if test="following-sibling::*">,</xsl:if>
+                    </xsl:template>
+                <!-- -->
+                    <!-- Attribute Property -->
+                    <xsl:template match="@*">
+                        <xsl:value-of select='concat($q, "@", name(), $q, ": ", $q, ., $q)' />
+                        <xsl:if test="following-sibling::*">,</xsl:if>
+                    </xsl:template>
+                </xsl:stylesheet>
+        
+                EOC;
     }
-    </xsl:template>
-    
-    <xsl:template match="*">
-        <xsl:value-of select='concat($q, name(), $q, ": ")' />
-        <xsl:call-template name="Properties"/>
-    </xsl:template>
 
-    <xsl:template match="*" mode="ArrayElement">
-        <xsl:call-template name="Properties"/>
-    </xsl:template>
-
-    <xsl:template name="Properties">
-        <xsl:variable name="childName" select="name(*[1])"/>
-        <xsl:choose>
-            <xsl:when test="not(*|@*)"><xsl:value-of select="concat($q, ., $q)"/></xsl:when>
-            <xsl:when test="count(*[name()=$childName]) > 1">{ 
-                <xsl:value-of select="concat($q, $childName, $q)"/>:[<xsl:apply-templates select="*" mode="ArrayElement"/>] 
-            }</xsl:when>
-            <xsl:otherwise>{
-                <xsl:apply-templates select="@*"/>
-                <xsl:apply-templates select="*"/>
-    }</xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="following-sibling::*">,</xsl:if>
-    </xsl:template>
-
-    <!-- Attribute Property -->
-    <xsl:template match="@*"><xsl:value-of select="concat($q, name(), q)"/>: "<xsl:value-of select="."/>",
-    </xsl:template>
-</xsl:stylesheet>
-EOC;
+    public static function saveJsonXsltRecordset() {
+        return <<<'EOC'
+               <?xml version="1.0"?>
+                <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                   <xsl:output method="text"/>
+                   <xsl:variable name='q'>"</xsl:variable>
+               <!-- -->
+                   <xsl:template match="/recordset">
+                       <xsl:value-of select='concat("{", $q, @zname, $q, ": [")' />
+                           <xsl:for-each select='/*/row'>
+                               {
+                               <xsl:for-each select='field'>
+                                   <xsl:value-of select='concat($q, @id, $q)' />: <xsl:value-of select='concat($q, ., $q)' />
+                                   <xsl:if test="following-sibling::*">,</xsl:if>
+                               </xsl:for-each>
+                               }
+                           <xsl:if test="following-sibling::*">,</xsl:if>
+                           </xsl:for-each>
+               ]}
+                   </xsl:template>
+               </xsl:stylesheet>
+               EOC;
     }
 
-    public function saveJson() {
-// print "\nXML=".$this->saveXML();
-        $str = xml_file::docXml(xml_file::transformXMLXSL_static($this->saveXML(), xml_file::saveJsonXslt()));
+    public static function saveJsonStylesheet($mode) {
+        switch($mode) {
+            case "recordset": return self::saveJsonXsltRecordset();
+            default: return self::saveJsonXsltStandard();
+        }
+    }
+
+    public function saveJson($mode = '') {
+        $str = self::docXml(self::transformXMLXSL_static($this->saveXML(), self::saveJsonStylesheet($mode)));
         $str = str_replace('<?xml version="1.0"?>', '', $str);
+        $str = str_replace("\n", '', $str);
         $result = self::tidyJson_string($str);
-        return $result ? $result : $str;  // in case tidy fails
+        return $result !== false ? $result : $str;  // in case tidy fails
    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -913,6 +945,7 @@ EOC;
         if ($json == '') return "";
 // print "\nINPUT=".print_r($json, true);
         $data = json_decode($json);
+        if ($data == null) return $json;
 // print "\nDATA=".print_r($data, true);
         $result = json_encode($data, $options);
 // print "\nRESULT=$result";
