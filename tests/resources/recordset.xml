@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<recordset zname="options" zmode="data" count="1">
+  <row>
+    <field id="userid"><![CDATA[3]]></field>
+    <field id="name"><![CDATA[george]]></field>
+    <field id="option1"><![CDATA[2]]></field>
+    <field id="option2"><![CDATA[3]]></field>
+    <field id="option3"><![CDATA[4]]></field>
+  </row>
+</recordset>
