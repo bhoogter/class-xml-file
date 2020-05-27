@@ -43,6 +43,16 @@ class converter_test extends TestCase
         $this->assertEquals("string", gettype(xml_file::toXML(self::getDocEl())));
     }
 
+    public function testToXHTML(): void
+    {
+        $s = "<?xml version='1.0' standalone='yes' ?>\n<elements><item /></elements>";
+        $e = "<elements><item/></elements>";
+        $this->assertEquals($e, str_replace(" ", "", xml_file::toXHTML($s)));
+        $this->assertEquals($e, str_replace(" ", "", xml_file::toXHTML(xml_file::toXML($s))));
+        $this->assertEquals($e, str_replace(" ", "", xml_file::toXHTML(xml_file::toXmlFile($s))));
+        $this->assertEquals($e, str_replace(array(" ", "\n"), "", xml_file::toXHTML(xml_file::toDoc($s))));
+    }
+
     public function testToDoc(): void
     {
         $this->assertEquals("DOMDocument", get_class(xml_file::toDoc(self::XML_TEXT)));

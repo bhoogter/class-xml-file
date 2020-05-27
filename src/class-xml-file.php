@@ -164,8 +164,8 @@ class xml_file extends xml_file_base
         if (!$sysTime) return true;
 //print "\n<br/>xml_file::merge_update_required - sysTime=$sysTime, aPath=$this->aPath";
 //print_r($this->merge_list());
-        foreach ($this->merge_list($scan) as $m)
-            if (@filemtime($m) > $sysTime) return true;
+        foreach ($this->merge_list($scan) as $accessor)
+            if (@filemtime($accessor) > $sysTime) return true;
         return false;
     }
 
@@ -180,9 +180,9 @@ class xml_file extends xml_file_base
         }
 
 // print "\n<br/>xml_file:: merge_join_to_xml - list="; print_r($this->merge_list($scan));
-        foreach ($this->merge_list($scan) as $m) {
-// print "\n<br/>xml_file::merge_join_to_xml - m=$m";
-            $M = new xml_file($m);
+        foreach ($this->merge_list($scan) as $accessor) {
+// print "\n<br/>xml_file::merge_join_to_xml - accessor=$accessor";
+            $M = new xml_file($accessor);
             $n = 0;
             while (++$n > 0) { // Always.  See break below.
 // print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
@@ -427,7 +427,7 @@ class xml_file extends xml_file_base
         return null;
     }
 
-    static function toXML($k)
+    static function toXml($k)
     {
         if (is_string($k)) {
             if (file_exists($k)) return file_get_contents($k);
@@ -438,6 +438,16 @@ class xml_file extends xml_file_base
             else if (is_a($k, get_class())) return $k->saveXML();
         }
         return null;
+    }
+    
+    static function toXhtml($k)
+    {
+        $s = self::toXML($k);
+        if (substr($s, 0, 6) == "<?xml " && false !== ($l = strpos($s, '?>')))
+            $s = substr($s, $l + 2);
+        
+        $s = trim($s);
+        return $s;
     }
 
     static function toJson($k) { return self::toXmlFile($k)->saveJson(); }
@@ -547,14 +557,14 @@ class xml_file extends xml_file_base
     }
 
 //  Extends XPaths correctly
-    static function extend_path($b, $l, $m)
+    static function extend_path($base, $field, $accessor)
     {
-        if ($b == "") $b = '/';
-        if ($b[strlen($b) - 1] != '/') $b = $b . "/";
-        if ($m == '@') $m = $b . '@' . $l;
-        else if ($m == '') $m = $b . $l;
-        else if ($m[0] != '/') $m = $b . $m;
-        return $m;
+        if ($base == "") $base = '/';
+        if ($base[strlen($base) - 1] != '/') $base = $base . "/";
+        if ($accessor == '@') $accessor = $base . '@' . $field;
+        else if ($accessor == '') $accessor = $base . $field;
+        else if ($accessor[0] != '/') $accessor = $base . $accessor;
+        return $accessor;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -675,18 +685,18 @@ class xml_file extends xml_file_base
 
         $s = "";
         $xsx = $this->xpathsplit($srcx);
-        foreach ($xsx as $n => $m) {
+        foreach ($xsx as $n => $accessor) {
             $pre_s = $s;
-            if (!($m == "" && $s == "")) $s = "$s/$m";
+            if (!($accessor == "" && $s == "")) $s = "$s/$accessor";
             if ($s == "") continue;
 
             $en = $this->query($s);
             if ($en->length == 0) {
-                if ($m[0] == '@') {
-                    $this->replace_attribute($parent, substr($m, 1), $value, false);
+                if ($accessor[0] == '@') {
+                    $this->replace_attribute($parent, substr($accessor, 1), $value, false);
                 } else {
-                    if (!$this->XPathAttribute($m, $a, $b, $c)) {
-                        $dd = $this->Doc->createElement($m);
+                    if (!$this->XPathAttribute($accessor, $a, $b, $c)) {
+                        $dd = $this->Doc->createElement($accessor);
                         if ($n == count($xsx) - 1)
                             $this->replace_content($dd, $value);
                         $parent->appendChild($dd);
