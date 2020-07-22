@@ -427,6 +427,11 @@ class xml_file extends xml_file_base
         return null;
     }
 
+    static function toDocEl($k)
+    {
+        return self::toDoc($k)->documentElement;
+    }
+
     static function toXml($k)
     {
         if (is_string($k)) {
