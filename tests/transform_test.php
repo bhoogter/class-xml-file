@@ -53,4 +53,16 @@ class transform_test extends TestCase
         $result = xml_file::transformXMLXSL_static($x, $y);
         $this->assertTrue(strpos($result->saveXML(), "Collection") !== false);
     }
+
+    public function testTransformConstructorXmlXsl(): void
+    {
+        $result = new xml_file(self::XML_FILE, '', self::XSL_FILE);
+        $this->assertTrue(strpos($result->saveXML(), "Collection") !== false);
+    }
+
+    public function testTransformConstructorXmlXslObject(): void
+    {
+        $result = new xml_file(self::XML_FILE, '', new xml_file(self::XSL_FILE));
+        $this->assertTrue(strpos($result->saveXML(), "Collection") !== false);
+    }
 }
