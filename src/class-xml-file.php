@@ -63,10 +63,13 @@ class xml_file extends xml_file_base
             if (strstr(strtolower($a[1]), "stacktrace")) $this->stacktrace = true;
         }
         if ($n >= 3) {
-            if (is_string($a[2])) {
-                if (substr($a[2], 0, 1) == "<") $this->transformXSL($a[2]);
-                else if (file_exists($a[2])) $this->transform($a[2]);
-            }
+            $this->transform(self::toDoc($a[2]));
+            // if (is_string($a[2])) {
+            //     if (substr($a[2], 0, 1) == "<") $this->transformXSL($a[2]);
+            //     else if (file_exists($a[2])) $this->transform($a[2]);
+            // } else if (is_a($a[2], get_class())) {
+            //     $this->transform(self::toDoc($a[2]));
+            // }
         }
     }
 

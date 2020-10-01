@@ -15,7 +15,7 @@ class properties_test extends TestCase
     const tagItem = 'set';
 
     public function testSetGetListHas() {
-        $propName = "1";
+        $propName = "aa";
         $propValue = "2";
 
         $obj = new xml_file();
