@@ -357,7 +357,7 @@ class xml_file extends xml_file_base
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static function XMLToDoc($XML)
     {
-        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".print_r($f, true));
+        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".print_r($XML, true));
         $XML = self::make_tidy_string($XML);
         $D = new DOMDocument;
         $D->loadXML($XML);
