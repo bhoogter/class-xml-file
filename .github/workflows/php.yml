@@ -12,5 +12,5 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           ls
-          php buildPhar.php
+          php --define phar.readonly=0 buildPhar.php
       - run: echo "🍏 This job's status is ${{ job.status }}."
