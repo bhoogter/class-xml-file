@@ -10,7 +10,7 @@ jobs:
         run: ls ${{ github.workspace }}
       - name: Run Packager
         run: | 
-          chmod +x ./package
+          ls ${{ github.workspace }}
           ./package
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
