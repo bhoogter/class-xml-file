@@ -1,7 +1,7 @@
 name: Release Code
 on: [push]
 jobs:
-  "Test And Release":
+  Test-And-Release:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -16,7 +16,9 @@ jobs:
         run: cat VERSION | grep 'dev' || true
       - name: Run Packager
         if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
-        run: php --define phar.readonly=0 buildPhar.php
+        run: |
+            echo "DePLOY: "  $(join(steps.deploy.outputs.*, '\n'))
+            php --define phar.readonly=0 buildPhar.php
       - name: Create Release
         if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
         uses: actions/create-release@v1
