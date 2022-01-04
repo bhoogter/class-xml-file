@@ -10,7 +10,7 @@ jobs:
         run: cd ${{ github.workspace }}
       - name: Get Version
         id: version
-        run: cat VERSION | grep '-dev'
+        run: cat VERSION | grep 'dev'
       - name: List files in the repository
         run: ls
       - name: Run Packager
