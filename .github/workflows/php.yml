@@ -12,5 +12,7 @@ jobs:
         run: | 
           ls ${{ github.workspace }}
           ./package
-
+      - run: |
+          cd ${{ gethub.workspace }}
+          ./package
       - run: echo "🍏 This job's status is ${{ job.status }}."
