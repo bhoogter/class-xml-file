@@ -11,7 +11,7 @@ jobs:
       - name: Get Version
         id: version
         run: cat VERSION
-      - name: Get Version
+      - name: Get Deployment
         id: deploy
         run: cat VERSION | grep 'dev'
       - name: List files in the repository
