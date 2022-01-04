@@ -9,7 +9,9 @@ if [[ -f "../box.phar" ]]; then BOX=../box.phar; fi
 if [[ "$BOX" == "" ]]; then 
 	echo 'Installing the boxer...'
 	composer phar:install-tools
+	echo 'Installing composer install...'
 	composer install --prefer-dist --no-dev --no-interaction
+	echo 'After composer install...'
 	$($0)
 	exit 0
 fi
