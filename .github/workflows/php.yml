@@ -13,7 +13,7 @@ jobs:
         run: cat VERSION
       - name: Get Deployment
         id: deploy
-        run: cat VERSION | grep 'dev'
+        run: cat VERSION | grep 'dev' || true
       - name: List files in the repository
         run: ls
       - name: Run Packager
