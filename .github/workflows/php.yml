@@ -17,10 +17,10 @@ jobs:
       - name: List files in the repository
         run: ls
       - name: Run Packager
-        if: ${{ steps.deploy.outputs.* == '' }}
+        if: ${{ steps.deploy.outputs.stdout == '' }}
         run: php --define phar.readonly=0 buildPhar.php
       - name: Create Release
-        if: ${{ steps.deploy.outputs.* == '' }}
+        if: ${{ steps.deploy.outputs.stdout == '' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
