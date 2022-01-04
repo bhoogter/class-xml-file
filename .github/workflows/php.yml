@@ -45,5 +45,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./xml-file.phar
           asset_name: xml-file.phar
-          # asset_content_type: application/gzip
+          asset_content_type: application/x-httpd-php
       - run: echo "🍏 This job's status is ${{ job.status }}."
