@@ -25,6 +25,7 @@ jobs:
             php --define phar.readonly=0 buildPhar.php
       - name: Create Release
         if: ${{ steps.version.outputs.deploy == '' }}
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -34,4 +35,13 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           release_name: ${{ steps.version.outputs.version }}
           asset_name: xml-file.phar
+      - name: Upload Asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./xml-file.phar
+            asset_name: xml-file.phar
+            # asset_content_type: application/gzip
       - run: echo "🍏 This job's status is ${{ job.status }}."
