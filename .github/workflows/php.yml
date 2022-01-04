@@ -11,8 +11,8 @@ jobs:
       - name: Get Version
         id: version
         run: |
-             echo "::set-output name=version::$(cat VERSION)"
-             echo "::set-output name=deploy::$(cat VERSION | grep 'dev' || true)"
+            echo "::set-output name=version::$(cat VERSION)"
+            echo "::set-output name=deploy::$(cat VERSION | grep 'dev' || true)"
       - name: Check Version
         run: |
             echo "VERSION: ${{ steps.version.outputs.version }}"
@@ -29,8 +29,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: ${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
+          asset_name: xml-file.phar
       - run: echo "🍏 This job's status is ${{ job.status }}."
