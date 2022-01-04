@@ -17,16 +17,16 @@ jobs:
       - name: List files in the repository
         run: ls
       - name: Run Packager
-        if: ${{ steps.deploy.outputs.deploy == '' }}
+        if: ${{ steps.deploy.outputs.* == '' }}
         run: php --define phar.readonly=0 buildPhar.php
       - name: Create Release
-        if: ${{ steps.deploy.outputs.deploy == '' }}
+        if: ${{ steps.deploy.outputs.* == '' }}
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.version.outputs.version }}
-          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ steps.version.outputs.* }}
+          release_name: ${{ steps.version.outputs.* }}
           draft: false
           prerelease: false
       - run: echo "🍏 This job's status is ${{ job.status }}."
