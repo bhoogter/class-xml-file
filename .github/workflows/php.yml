@@ -20,13 +20,13 @@ jobs:
         if: ${{ steps.deploy.outputs.deploy == '' }}
         run: php --define phar.readonly=0 buildPhar.php
       - name: Create Release
-        if: ${{ steps.version.outputs.version == '' }}
+        if: ${{ steps.deploy.outputs.deploy == '' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.deploy.outputs.deploy }}
-          release_name: ${{ steps.deploy.outputs.deploy }}
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
       - run: echo "🍏 This job's status is ${{ job.status }}."
