@@ -266,7 +266,7 @@ class xml_file extends xml_file_base
     {
         if (!$this->can_save($f)) return false;
         if ($f == "") $f = $this->filename;
-        file_put_contents($f, $this->saveXML($style == "auto" ? ($this->mode || 'xml') : $style));
+        file_put_contents($f, $this->saveXML($style == "auto" ? ($this->mode || 'xml') : $style), LOCK_EX);
         $this->modified = false;
         return true;
     }
@@ -467,7 +467,7 @@ class xml_file extends xml_file_base
         if (!($xsl = self::toDoc($f)))
             throw new Exception("Missing arg 2 for transform_static. Expected filename, xml_file, domdocument, etc.  Got ".gettype($f));
 
-        $xh = new XsltProcessor();
+        $xh = new XSLTProcessor();
         if ($doRegister) $xh->registerPHPFunctions();
         $xh->importStyleSheet($xsl);
         $D = $xh->transformToDoc($Doc);
@@ -509,7 +509,7 @@ class xml_file extends xml_file_base
         if (!($f = self::toDoc($f)))
             throw new Exception("Invalid argument 1 to transform().");
 
-        $xh = new XsltProcessor();
+        $xh = new XSLTProcessor();
         if ($doRegister) $xh->registerPHPFunctions();
         $xh->importStyleSheet($f);
         $result = $xh->transformToDoc($this->Doc);

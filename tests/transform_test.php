@@ -1,6 +1,8 @@
 <?php
 
 declare(strict_types=1);
+require_once("src/class-xml-file-interface.php");
+require_once("src/class-xml-file-base.php");
 
 use PHPUnit\Framework\TestCase;
 
