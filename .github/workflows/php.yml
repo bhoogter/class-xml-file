@@ -13,6 +13,10 @@ jobs:
         run: |
              echo "::set-output name=version::$(cat VERSION)"
              echo "::set-output name=deploy::$(cat VERSION | grep 'dev' || true)"
+      - name: Check Version
+        run: |
+            echo "VERSION: ${{ steps.version.outputs.version }}"
+            echo "DePLOY: ${{ steps.version.outputs.deploy }}"
       - name: Run Packager
         if: ${{ steps.version.outputs.deploy == '' }}
         run: |
