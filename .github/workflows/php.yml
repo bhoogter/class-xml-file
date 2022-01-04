@@ -25,8 +25,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.version.outputs.* }}
-          release_name: ${{ steps.version.outputs.* }}
+          tag_name: ${{ steps.version.outputs.stdout }}
+          release_name: ${{ steps.version.outputs.stdout }}
           draft: false
           prerelease: false
       - run: echo "🍏 This job's status is ${{ job.status }}."
