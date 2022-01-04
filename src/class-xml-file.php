@@ -4,10 +4,10 @@
 Module Name:  xml_file
 Module Source: http://www.github.com/bhoogter/xml-file
 Description: A convenient XML file wrapper designed for datastore and retrieval.
-Version: 0.2.70
+Version: 1.0.1
 Author: Benjamin Hoogterp
 Author URI: http://www.BenjaminHoogterp.com/
-License: LGPLv3
+License: BSD (2 Clause)
 */
 
 class xml_file extends xml_file_base
