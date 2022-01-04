@@ -10,10 +10,9 @@ jobs:
         run: cd ${{ github.workspace }}
       - name: Get Version
         id: version
-        run: cat VERSION
-      - name: Get Deployment
-        id: deploy
-        run: cat VERSION | grep 'dev' || true
+        run: |
+             echo "::set-output name=version::$(cat VERSION)"
+             echo "::set-output name=deploy::$(cat VERSION | grep 'dev' || true)"
       - name: Run Packager
         if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
         run: |
