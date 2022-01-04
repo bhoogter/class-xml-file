@@ -10,11 +10,14 @@ jobs:
         run: cd ${{ github.workspace }}
       - name: Get Version
         id: version
+        run: cat VERSION
+      - name: Get Version
+        id: deploy
         run: cat VERSION | grep 'dev'
       - name: List files in the repository
         run: ls
       - name: Run Packager
-        if: ${{ steps.version.outputs.version == '' }}
+        if: ${{ steps.deploy.outputs.deploy == '' }}
         run: php --define phar.readonly=0 buildPhar.php
       - name: Create Release
         if: ${{ steps.version.outputs.version == '' }}
@@ -22,12 +25,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          # body: |
-          #   Changes in this Release
-          #   - First Change
-          #   - Second Change
+          tag_name: ${{ steps.deploy.outputs.deploy }}
+          release_name: ${{ steps.deploy.outputs.deploy }}
           draft: false
           prerelease: false
       - run: echo "🍏 This job's status is ${{ job.status }}."
