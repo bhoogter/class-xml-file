@@ -23,4 +23,4 @@ http://www.BenjaminHoogterp.com
 
 ## License
 
-LGPL v3.0
+BSD 2 Clause

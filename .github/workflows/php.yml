@@ -12,6 +12,5 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           ls
-          chmod +x ./package
-          ./package
+          php buildPhar.php
       - run: echo "🍏 This job's status is ${{ job.status }}."
