@@ -17,7 +17,7 @@ jobs:
       - name: Run Packager
         if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
         run: |
-            echo "DePLOY: "  $(join(steps.deploy.outputs.*, '\n'))
+            echo "DePLOY: ${{ join(steps.deploy.outputs.*, '\n') }}"
             php --define phar.readonly=0 buildPhar.php
       - name: Create Release
         if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
