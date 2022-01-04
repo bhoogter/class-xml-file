@@ -12,5 +12,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           ls
+          chmod +x ./package
           ./package
       - run: echo "🍏 This job's status is ${{ job.status }}."
