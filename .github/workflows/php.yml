@@ -36,12 +36,12 @@ jobs:
           release_name: ${{ steps.version.outputs.version }}
           asset_name: xml-file.phar
       - name: Upload Asset
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ github.token }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./xml-file.phar
-            asset_name: xml-file.phar
-            # asset_content_type: application/gzip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./xml-file.phar
+          asset_name: xml-file.phar
+          # asset_content_type: application/gzip
       - run: echo "🍏 This job's status is ${{ job.status }}."
