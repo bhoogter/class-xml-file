@@ -36,6 +36,8 @@ jobs:
           release_name: ${{ steps.version.outputs.version }}
           asset_name: xml-file.phar
       - name: Upload Asset
+        if: ${{ steps.version.outputs.deploy == '' }}
+        id: upload_asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
