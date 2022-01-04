@@ -14,18 +14,18 @@ jobs:
              echo "::set-output name=version::$(cat VERSION)"
              echo "::set-output name=deploy::$(cat VERSION | grep 'dev' || true)"
       - name: Run Packager
-        if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
+        if: ${{ steps.version.outputs.deploy == '' }}
         run: |
-            echo "DePLOY: ${{ steps.deploy.outputs.stdout }}"
+            echo "DePLOY: ${{ steps.version.outputs.deploy }}"
             php --define phar.readonly=0 buildPhar.php
       - name: Create Release
-        if: ${{ join(steps.deploy.outputs.*, '\n') == '' }}
+        if: ${{ steps.version.outputs.deploy == '' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          tag_name: ${{ steps.version.outputs.stdout }}
-          release_name: ${{ steps.version.outputs.stdout }}
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: ${{ steps.version.outputs.version }}
           draft: false
           prerelease: false
       - run: echo "🍏 This job's status is ${{ job.status }}."
