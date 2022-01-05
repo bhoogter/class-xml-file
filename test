@@ -3,8 +3,15 @@ set -e
 
 cd $(dirname $0)
 
+testFile() {
+	php ../phpunit-9.5.phar --bootstrap ./src/stub.php $1
+}
+
 if [[ "$1" == "" ]]; then
-	../phpunit $1 --bootstrap ./src/stub.php --test-suffix '_test.php,-test.php,Test.php,.phpt' tests
+	for f in tests/*test.php; do
+		echo "test: $f"
+		testFile $f
+	done
 else
-	../phpunit --bootstrap ./src/stub.php $1
+	testFile $1
 fi
