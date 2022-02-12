@@ -31,7 +31,10 @@ class xml_file extends xml_file_base
     private const cDOMNode = "DOMNode";
 
 
-    function type() { return get_class($this); }
+    function type()
+    {
+        return get_class($this);
+    }
     function __construct()
     {
         $this->gid = uniqid($this->type() . "_");
@@ -153,7 +156,7 @@ class xml_file extends xml_file_base
 
     function merge_list($scan)
     {
-// print "\nxml_file::merge_list=";print_r($scan);
+        // print "\nxml_file::merge_list=";print_r($scan);
         if (is_array($scan)) return $scan;
         if (is_string($scan)) return glob($scan);
         return array();
@@ -165,8 +168,8 @@ class xml_file extends xml_file_base
         $sysTime = 0;
         $sysTime = @filemtime($persist);
         if (!$sysTime) return true;
-//print "\n<br/>xml_file::merge_update_required - sysTime=$sysTime, aPath=$this->aPath";
-//print_r($this->merge_list());
+        //print "\n<br/>xml_file::merge_update_required - sysTime=$sysTime, aPath=$this->aPath";
+        //print_r($this->merge_list());
         foreach ($this->merge_list($scan) as $accessor)
             if (@filemtime($accessor) > $sysTime) return true;
         return false;
@@ -174,7 +177,7 @@ class xml_file extends xml_file_base
 
     function merge_join_to_xml($scan, $root, $item, $target, $persist)
     {
-// print "\n<br/>xml_file::merge_join_to_xml(..., $root, $item, $persist)";
+        // print "\n<br/>xml_file::merge_join_to_xml(..., $root, $item, $persist)";
         if (!$this->loaded) {
             $x  = "";
             $x .= "<?xml version='1.0' encoding='iso-8859-1'?>\n";
@@ -182,26 +185,26 @@ class xml_file extends xml_file_base
             $this->loadXML($x);
         }
 
-// print "\n<br/>xml_file:: merge_join_to_xml - list="; print_r($this->merge_list($scan));
+        // print "\n<br/>xml_file:: merge_join_to_xml - list="; print_r($this->merge_list($scan));
         foreach ($this->merge_list($scan) as $accessor) {
-// print "\n<br/>xml_file::merge_join_to_xml - accessor=$accessor";
+            // print "\n<br/>xml_file::merge_join_to_xml - accessor=$accessor";
             $M = new xml_file($accessor);
             $n = 0;
             while (++$n > 0) { // Always.  See break below.
-// print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
-// print "\n<br/>>xml_file::merge_join_to_xml - path = " . "/$root/${item}[$n]";
+                // print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
+                // print "\n<br/>>xml_file::merge_join_to_xml - path = " . "/$root/${item}[$n]";
                 $node = $M->nde("/$root/${item}[$n]");
-// print "\n<br/>>xml_file::merge_join_to_xml - node = "; print_r($node);
+                // print "\n<br/>>xml_file::merge_join_to_xml - node = "; print_r($node);
                 if ($node == null) break;
 
-// print "\n<br/>xml_file::merge_join_to_xml - n=" . $M->saveXML($n);
+                // print "\n<br/>xml_file::merge_join_to_xml - n=" . $M->saveXML($n);
                 $el = $this->Doc->importNode($node, true);
 
-                if ($target == null) 
+                if ($target == null)
                     $this->Doc->documentElement->appendChild($el);
                 else
                     $this->nde($target)->appendChild($el);
-// print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
+                // print "\n<br/>>xml_file::merge_join_to_xml - cnt = " . $this->cnt("/$root/$item");
             }
         }
 
@@ -266,7 +269,7 @@ class xml_file extends xml_file_base
     {
         if (!$this->can_save($f)) return false;
         if ($f == "") $f = $this->filename;
-        file_put_contents($f, $this->saveXML($style == "auto" ? ($this->mode || 'xml') : $style), LOCK_EX);
+        $this->write_file($f, $this->saveXML($style == "auto" ? ($this->mode || 'xml') : $style));
         $this->modified = false;
         return true;
     }
@@ -274,7 +277,7 @@ class xml_file extends xml_file_base
     function query($Path)
     {
         if ($Path == "") die("No Path in XMLFILE::QUERY");
-        if (!$this->loaded || $this->Doc == null) return "";//die("No file in XMLFILE::QUERY");
+        if (!$this->loaded || $this->Doc == null) return ""; //die("No file in XMLFILE::QUERY");
         if ($this->XQuery == null) $this->XQuery = new DOMXPath($this->Doc);
         if (($res = $this->XQuery->query($Path)) === false) debug_print_backtrace();
         return $res;
@@ -342,22 +345,51 @@ class xml_file extends xml_file_base
         return $r;
     }
 
-    function map_attributes($Path)     {    }
+    function map_attributes($Path)
+    {
+    }
 
-    function get($p)        {        return $this->fetch_part($p);     }
-    function set($p, $v)    {        return $this->set_part($p, $v);   }
-    function del($p)        {        return $this->delete_part($p);    }
-    function lst($p)        {        return $this->fetch_list($p);     }
-    function nde($p)        {        return $this->fetch_node($p);     }
-    function nds($p)        {        return $this->fetch_nodes($p);    }
-    function cnt($p)        {        return $this->count_parts($p);    }
-    function def($p)        {        return $this->part_string($p);    }
-    function map($p)        {        return $this->map_attributes($p); }
+    function get($p)
+    {
+        return $this->fetch_part($p);
+    }
+    function set($p, $v)
+    {
+        return $this->set_part($p, $v);
+    }
+    function del($p)
+    {
+        return $this->delete_part($p);
+    }
+    function lst($p)
+    {
+        return $this->fetch_list($p);
+    }
+    function nde($p)
+    {
+        return $this->fetch_node($p);
+    }
+    function nds($p)
+    {
+        return $this->fetch_nodes($p);
+    }
+    function cnt($p)
+    {
+        return $this->count_parts($p);
+    }
+    function def($p)
+    {
+        return $this->part_string($p);
+    }
+    function map($p)
+    {
+        return $this->map_attributes($p);
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static function XMLToDoc($XML)
     {
-        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got ".print_r($XML, true));
+        if (!is_string($XML) || $XML == '') throw new Exception("Invalid argument 1 to XMLToDoc.  Expected string, got " . print_r($XML, true));
         $XML = self::make_tidy_string($XML);
         $D = new DOMDocument;
         $D->loadXML($XML);
@@ -366,7 +398,7 @@ class xml_file extends xml_file_base
 
     public static function FileToDoc($f)
     {
-        if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got ".print_r($f, true));
+        if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got " . print_r($f, true));
         if (!file_exists($f)) throw new Exception("File not found: $f");
         $D = new DOMDocument;
         $D->load($f);
@@ -375,45 +407,56 @@ class xml_file extends xml_file_base
 
     public static function DocToXML($Doc)
     {
-        if (!is_object($Doc) || !is_a($Doc, self::cDOMDocument)) throw new Exception("Invalid Argument 1 to DocToXML.  Expected DOMDocument, got ".get_class($Doc));
+        if (!is_object($Doc) || !is_a($Doc, self::cDOMDocument)) throw new Exception("Invalid Argument 1 to DocToXML.  Expected DOMDocument, got " . get_class($Doc));
         return $Doc->saveXML();
     }
 
     public static function DocElToDoc($el)
     {
-        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to DocElToDoc.  Expected DOMElement, got ".get_class($el));
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to DocElToDoc.  Expected DOMElement, got " . get_class($el));
         $x = $el->ownerDocument->saveXML($el);
         return self::XMLToDoc($x);
     }
 
-    public static function xmlDoc($XML) { return self::XMLToDoc($XML); }
-    public static function docXml($el) { return self::DocToXML($el); }
+    public static function xmlDoc($XML)
+    {
+        return self::XMLToDoc($XML);
+    }
+    public static function docXml($el)
+    {
+        return self::DocToXML($el);
+    }
 
-    public static function docXmlFile($el) {
-        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got ".get_class($el));
+    public static function docXmlFile($el)
+    {
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got " . get_class($el));
         return $el->ownerDocument->saveXML($el);
     }
 
-    public static function nodeXml($el) {
-        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got ".get_class($el));
+    public static function nodeXml($el)
+    {
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXml.  Expected DOMElement, got " . get_class($el));
         return $el->ownerDocument->saveXML($el);
     }
 
-    public static function nodeXmlFile($el) {
-        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlFile.  Expected DOMElement, got ".get_class($el));
+    public static function nodeXmlFile($el)
+    {
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlFile.  Expected DOMElement, got " . get_class($el));
         return new xml_file(self::nodeXml($el));
     }
 
-    public static function nodeXmlDoc($el) {
-        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlDoc.  Expected DOMElement, got ".get_class($el));
+    public static function nodeXmlDoc($el)
+    {
+        if (!is_object($el) || !is_a($el, self::cDOMElement)) throw new Exception("Invalid argument 1 to nodeXmlDoc.  Expected DOMElement, got " . get_class($el));
         return self::nodeXmlFile($el)->Doc;
     }
 
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
-    static function toXmlFile($k) {
+    static function toXmlFile($k)
+    {
         return new xml_file($k);
     }
 
@@ -438,7 +481,7 @@ class xml_file extends xml_file_base
     static function toXml($k)
     {
         if (is_string($k)) {
-            if (file_exists($k)) return file_get_contents($k);
+            if (file_exists($k)) return xml_file::read_file($k);
             else if (substr(trim($k), 0, 1) == '<') return $k;
         } else if (is_object($k)) {
             if (is_a($k, self::cDOMDocument)) return self::docXml($k);
@@ -447,25 +490,28 @@ class xml_file extends xml_file_base
         }
         return null;
     }
-    
+
     static function toXhtml($k)
     {
         $s = self::toXML($k);
         if (substr($s, 0, 6) == "<?xml " && false !== ($l = strpos($s, '?>')))
             $s = substr($s, $l + 2);
-        
+
         $s = trim($s);
         return $s;
     }
 
-    static function toJson($k) { return self::toXmlFile($k)->saveJson(); }
+    static function toJson($k)
+    {
+        return self::toXmlFile($k)->saveJson();
+    }
 
     static function transform_static($src, $f, $doRegister = true)
     {
-        if (!($Doc = self::toDoc($src))) 
-            throw new Exception("Missing arg 1 for transform_static. Expected filename, xml_file, domdocument, etc.  Got ".gettype($src));
+        if (!($Doc = self::toDoc($src)))
+            throw new Exception("Missing arg 1 for transform_static. Expected filename, xml_file, domdocument, etc.  Got " . gettype($src));
         if (!($xsl = self::toDoc($f)))
-            throw new Exception("Missing arg 2 for transform_static. Expected filename, xml_file, domdocument, etc.  Got ".gettype($f));
+            throw new Exception("Missing arg 2 for transform_static. Expected filename, xml_file, domdocument, etc.  Got " . gettype($f));
 
         $xh = new XSLTProcessor();
         if ($doRegister) $xh->registerPHPFunctions();
@@ -477,13 +523,19 @@ class xml_file extends xml_file_base
     }
 
     static function transformXSL_static($f, $XSL, $doRegister = true)
-    {         return self::transform_static($f, self::XMLToDoc($XSL), $doRegister);    }
+    {
+        return self::transform_static($f, self::XMLToDoc($XSL), $doRegister);
+    }
 
     static function transformXML_static($XML, $f, $doRegister = true)
-    {        return xml_file::transform_static(xml_file::XMLToDoc($XML), $f, $doRegister);    }
+    {
+        return xml_file::transform_static(xml_file::XMLToDoc($XML), $f, $doRegister);
+    }
 
     static function transformXMLXSL_static($XML, $XSL, $doRegister = true)
-    {        return xml_file::transform_static(xml_file::XMLToDoc($XML), xml_file::XMLToDoc($XSL), $doRegister); }
+    {
+        return xml_file::transform_static(xml_file::XMLToDoc($XML), xml_file::XMLToDoc($XSL), $doRegister);
+    }
 
     static function NodeToString($node, $part = "all")
     {
@@ -555,7 +607,7 @@ class xml_file extends xml_file_base
             }
             if ($remove && $nquotes > 0) {
                 // Remove first and last quotes, then merge pairs of quotes
-                $qstr =& $elements[$i];
+                $qstr = &$elements[$i];
                 $qstr = substr_replace($qstr, '', strpos($qstr, $delim), 1);
                 $qstr = substr_replace($qstr, '', strrpos($qstr, $delim), 1);
                 $qstr = str_replace($delim . $delim, $delim, $qstr);
@@ -564,7 +616,7 @@ class xml_file extends xml_file_base
         return $elements;
     }
 
-//  Extends XPaths correctly
+    //  Extends XPaths correctly
     static function extend_path($base, $field, $accessor)
     {
         if ($base == "") $base = '/';
@@ -677,8 +729,10 @@ class xml_file extends xml_file_base
         } else return false;
 
         if (substr($Sb, 0, 1) == "@") $Sb = substr($Sb, 1);
-        if (substr($Sc, 0, 1) == "'" && substr($Sc, strlen($Sc) - 1) == "'" ||
-            substr($Sc, 0, 1) == '"' && substr($Sc, strlen($Sc) - 1) == '"')
+        if (
+            substr($Sc, 0, 1) == "'" && substr($Sc, strlen($Sc) - 1) == "'" ||
+            substr($Sc, 0, 1) == '"' && substr($Sc, strlen($Sc) - 1) == '"'
+        )
             $Sc = substr($Sc, 1, strlen($Sc) - 2);
 
         $lvl = $Sa;
@@ -805,59 +859,62 @@ class xml_file extends xml_file_base
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public function loadJson($json, $root = 'jsonData') {
-        if (file_exists($json)) $json = file_get_contents($json);
+    public function loadJson($json, $root = 'jsonData')
+    {
+        if (file_exists($json)) $json = xml_file::read_file($json);
         $this->Doc = $this->jsonToDomDocument($json, $root);
         $this->init();
     }
 
     private function jsonToDomDocument($json, $root = 'jsonData')
     {
-// print("\n<br/>jsonToDomDocument()");
+        // print("\n<br/>jsonToDomDocument()");
         try {
             $data = json_decode($json);
-        } catch(Exception $e) {
-             throw new Exception("jsonToDomDocument: json_decode failed: " + e.getMessage());
+        } catch (Exception $e) {
+            throw new Exception("jsonToDomDocument: json_decode failed: " + e . getMessage());
         }
-// print_r($data);
-        
-// print("\n<br/>jsonToDomDocument(): Creating document");
+        // print_r($data);
+
+        // print("\n<br/>jsonToDomDocument(): Creating document");
         $doc = new DomDocument();
-// print("\n<br/>jsonToDomDocument(): Loading document");
+        // print("\n<br/>jsonToDomDocument(): Loading document");
         $doc->loadXML("<?xml version=\"1.0\" ?>\n<$root />");
 
-// print("\n<br/>jsonToDomDocument(): loading data");
+        // print("\n<br/>jsonToDomDocument(): loading data");
         $this->jsonToDomDocumentItem($data, $doc->documentElement, $doc);
-// print("\n<br/>jsonToDomDocument(): loaded data");
+        // print("\n<br/>jsonToDomDocument(): loaded data");
         return $doc;
     }
 
-    private function cleanXmlName($name) {
-// Element names are case-sensitive
-// Element names must start with a letter or underscore
-// Element names cannot start with the letters xml (or XML, or Xml, etc)
-// Element names can contain letters, digits, hyphens, underscores, and periods
-// Element names cannot contain spaces
+    private function cleanXmlName($name)
+    {
+        // Element names are case-sensitive
+        // Element names must start with a letter or underscore
+        // Element names cannot start with the letters xml (or XML, or Xml, etc)
+        // Element names can contain letters, digits, hyphens, underscores, and periods
+        // Element names cannot contain spaces
         $name = preg_replace("[\]\[ &<>,]", "-", $name);
         if (preg_match("[a-zA-Z_]", $name) === false) $name = "_$name";
         return $name;
     }
 
-    private function cleanXmlVal($name) {
+    private function cleanXmlVal($name)
+    {
         return "$name";
     }
 
     private function jsonToDomDocumentItem($el,  $parent, $doc)
     {
-// print "\n<br/>jsonToDomDocumentArray(): class=" . (is_object($el) ? get_class($el) : "--");
+        // print "\n<br/>jsonToDomDocumentArray(): class=" . (is_object($el) ? get_class($el) : "--");
         if (is_a($el, "stdClass")) {
             foreach ($el as $item => $val) {
-// print "\n<br/>jsonToDomDocumentArray(): item=$item [" . $this->cleanXmlName($item) . "]";
+                // print "\n<br/>jsonToDomDocumentArray(): item=$item [" . $this->cleanXmlName($item) . "]";
                 $node = $doc->createElement($this->cleanXmlName($item));
                 $parent->appendChild($node);
                 $this->jsonToDomDocumentItem($val, $node, $doc);
-// print "\n<br/>jsonToDomDocumentArray(): val=";
-// print_r($val);
+                // print "\n<br/>jsonToDomDocumentArray(): val=";
+                // print_r($val);
             }
         } else if (is_array($el)) {
             foreach ($el as $v) {
@@ -871,7 +928,8 @@ class xml_file extends xml_file_base
         }
     }
 
-    public static function saveJsonXsltStandard() {
+    public static function saveJsonXsltStandard()
+    {
         return <<<'EOC'
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -948,7 +1006,8 @@ class xml_file extends xml_file_base
 EOC;
     }
 
-    public static function saveJsonXsltRecordset() {
+    public static function saveJsonXsltRecordset()
+    {
         return <<<'EOC'
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -972,27 +1031,82 @@ EOC;
 EOC;
     }
 
-    public static function saveJsonStylesheet($mode) {
-        switch($mode) {
-            case "recordset": return self::saveJsonXsltRecordset();
-            default: return self::saveJsonXsltStandard();
+    public static function saveJsonStylesheet($mode)
+    {
+        switch ($mode) {
+            case "recordset":
+                return self::saveJsonXsltRecordset();
+            default:
+                return self::saveJsonXsltStandard();
         }
     }
 
-    public function saveJson($mode = '', $options = JSON_PRETTY_PRINT) {
+    public function saveJson($mode = '', $options = JSON_PRETTY_PRINT)
+    {
         $str = self::docXml(self::transformXMLXSL_static($this->saveXML(), self::saveJsonStylesheet($mode)));
         $str = str_replace('<?xml version="1.0"?>', '', $str);
         $str = str_replace("\n", '', $str);
         $result = self::tidyJson_string($str, $options);
         return $result !== false ? $result : $str;  // in case tidy fails
-   }
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT) {
+    protected static function read_file($filename)
+    {
+        $fp = fopen($filename, "r");
+        $success = false;
+        $result = "";
+
+        $attempts = 15;
+        while ($attempts-- > 0) {
+            if (flock($fp, LOCK_SH)) {  // acquire an exclusive shared lock
+                $result = fread($fp, filesize($filename));
+                flock($fp, LOCK_UN);    // release the lock
+                $success = true;
+                break;
+            }  
+        }
+
+        fclose($fp);
+        if (!$success) echo "Couldn't get the lock: $filename";
+        return $result;
+    }
+
+    protected static function write_file($filename, $contents)
+    {
+        // We use same format for read and write, and read doesn't accept LOCK_SH
+        // file_put_contents($filename, $contents, LOCK_EX);
+
+        $fp = fopen($filename, "w");
+        $success = false;
+
+        $attempts = 15;
+        while ($attempts-- > 0) {
+            if (flock($fp, LOCK_EX)) {  // acquire an exclusive lock
+                ftruncate($fp, 0);      // truncate (erase/overwrite) file
+                fwrite($fp, $contents);
+                fflush($fp);            // flush output before releasing the lock
+                flock($fp, LOCK_UN);    // release the lock
+                $success = true;
+                break;
+            }
+        }
+
+        fclose($fp);
+        if (!$success) echo "Couldn't get the lock: $filename";
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    static function tidyJson_string($json, $options = JSON_PRETTY_PRINT)
+    {
         if (!is_string($json)) throw new InvalidArgumentException("Expecting string, got [" . gettype($json) . "]");
         if ($json == '') return "";
 
@@ -1036,7 +1150,7 @@ EOC;
         $topt["markup"] = true;
         $topt["new-empty-tags"] = "page, field, caption";
         $topt["add-xml-decl"] = false;
-//          $topt["add-xml-pi"]     = false;
+        //          $topt["add-xml-pi"]     = false;
         $topt["alt-text"] = "Image";
         $topt["break-before-br"] = true;
         $topt["drop-empty-paras"] = false;
@@ -1103,13 +1217,13 @@ EOC;
         $tidy = new tidy;
         $tidy->parseFile($filename, self::tidy_opt($style));
         $tidy->CleanRepair();
-        return file_put_contents($filename, $tidy->value);
+        return xml_file::write_file($filename, $tidy->value);
     }
 
     static function tidy_cleanup($s, $style = 'auto')             // when tidy makes a mess....
     {
-// Tidy wont stop indenting CDATA, which adds extra line feeds at the beginning and end of of CDATA fields
-// despite indent-cdata being set to false
+        // Tidy wont stop indenting CDATA, which adds extra line feeds at the beginning and end of of CDATA fields
+        // despite indent-cdata being set to false
         if ($style == "none") return $s;
         $s = preg_replace("/\n( )*<![[]CDATA[[](.*)[]][]]>\n/U", "<![CDATA[$2]]>", $s);
         switch ($style) {
