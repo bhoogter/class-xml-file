@@ -141,7 +141,10 @@ class xml_file extends xml_file_base
         $this->Doc = new DomDocument;
         $res = false;
         try {
-            $res = $this->Doc->load($file);
+            $tmpDoc = $this->Doc;
+            $res = xml_file::protected_file_operation($file, "r", function ($fp) use ($tmpDoc, $file) {
+                return $tmpDoc->load($file);
+            });
         } catch (Exception $e) {
             $this->err = $e->getMessage();
             $res = false;
@@ -401,7 +404,9 @@ class xml_file extends xml_file_base
         if (!is_string($f)) throw new Exception("Invalid argument 1 to FileToDoc.  Expected filename, got " . print_r($f, true));
         if (!file_exists($f)) throw new Exception("File not found: $f");
         $D = new DOMDocument;
-        $D->load($f);
+        xml_file::protected_file_operation($f, "r", function ($fp) use ($D, $f) {
+            $D->load($f);
+        });
         return $D;
     }
 
