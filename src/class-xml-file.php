@@ -1055,25 +1055,32 @@ EOC;
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected static function read_file($filename)
+    protected static function protected_file_operation($filename, $filemode, $operation)
     {
-        $fp = fopen($filename, "r");
-        $success = false;
+        $fp = fopen($filename, $filemode);
+        $lock_success = false;
         $result = "";
 
         $attempts = 15;
         while ($attempts-- > 0) {
-            if (flock($fp, LOCK_SH)) {  // acquire an exclusive shared lock
-                $result = fread($fp, filesize($filename));
+            if (flock($fp, $filemode == "r" ? LOCK_SH : LOCK_EX)) {  // acquire lock
+                $result = $operation($fp, $filename);
                 flock($fp, LOCK_UN);    // release the lock
-                $success = true;
+                $lock_success = true;
                 break;
-            }  
+            }
         }
 
         fclose($fp);
-        if (!$success) echo "Couldn't get the lock: $filename";
+        if (!$lock_success) echo "Couldn't get the lock: $filename";
         return $result;
+    }
+
+    protected static function read_file($filename)
+    {
+        return xml_file::protected_file_operation($filename, "r", function ($fp) use ($filename) {
+            return fread($fp, filesize($filename));
+        });
     }
 
     protected static function write_file($filename, $contents)
@@ -1081,23 +1088,12 @@ EOC;
         // We use same format for read and write, and read doesn't accept LOCK_SH
         // file_put_contents($filename, $contents, LOCK_EX);
 
-        $fp = fopen($filename, "w");
-        $success = false;
-
-        $attempts = 15;
-        while ($attempts-- > 0) {
-            if (flock($fp, LOCK_EX)) {  // acquire an exclusive lock
-                ftruncate($fp, 0);      // truncate (erase/overwrite) file
-                fwrite($fp, $contents);
-                fflush($fp);            // flush output before releasing the lock
-                flock($fp, LOCK_UN);    // release the lock
-                $success = true;
-                break;
-            }
-        }
-
-        fclose($fp);
-        if (!$success) echo "Couldn't get the lock: $filename";
+        return xml_file::protected_file_operation($filename, "w",  function ($fp) use ($contents) {
+            ftruncate($fp, 0);      // truncate (erase/overwrite) file
+            fwrite($fp, $contents);
+            fflush($fp);            // flush output before releasing the lock
+            return "";              // Supply return value.  Not used on write.
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
